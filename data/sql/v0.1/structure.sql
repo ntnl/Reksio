@@ -3,8 +3,6 @@ CREATE TABLE reksio_Metadata (
     value       VARCHAR(256)
 );
 
-###
-
 CREATE TABLE reksio_Repository (
     id      INT,
 

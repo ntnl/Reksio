@@ -23,14 +23,14 @@
 
     Filesystem:
 
-        tests/   <-- directory where test-result-data is stored (can be named differently).
-        tests/repository_id/
-        tests/repository_id/revision_id/
-        tests/repository_id/revision_id/info.yaml
-        tests/repository_id/revision_id/tests/    <-- directory where test results lay
-        tests/repository_id/revision_id/tests/ddd/    <-- directory where results of test with test_id % 1000
-        tests/repository_id/revision_id/tests/ddd/test_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
-        tests/repository_id/revision_id/tests/ddd/test_id-results.yaml    <-- actual test results, formatted in YAML
+        builds/   <-- directory where test-result-data is stored (can be named differently).
+        builds/repository_id/
+        builds/repository_id/revision_id/
+        builds/repository_id/revision_id/info.yaml
+        builds/repository_id/revision_id/builds/    <-- directory where test results lay
+        builds/repository_id/revision_id/builds/ddd/    <-- directory where results of test with result_id % 1000
+        builds/repository_id/revision_id/builds/ddd/result_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
+        builds/repository_id/revision_id/builds/ddd/result_id-results.yaml    <-- actual test results, formatted in YAML
 
  Config:
 
@@ -40,8 +40,8 @@
  db
     database - either a sqlite file or (in future) stuff needed for normal DB.
 
- tests_results
-    directory where test-result-data is stored
+ build_results
+    directory where build-result-data is stored
 
  Config file location:
 

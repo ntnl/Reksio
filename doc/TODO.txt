@@ -3,7 +3,7 @@
 
 [X] Bootstrap
 [X]     Script to create static test data
-[ ]     Setup module (create DB and directories) for test purposes
+[X]     Setup module (create DB, directories and fake config) for test purposes
 [ ]     Read config
 [ ]     Connect to DB
 [ ] Configuration commands
