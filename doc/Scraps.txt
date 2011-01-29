@@ -1,0 +1,55 @@
+
+ Functionality:
+
+    Dispatch (give tasks to workers)
+    Inspect repository (check if there are new commits)
+    Run build for a commit (and store test results)
+    Compare test results from two commits (and report back)
+
+ Utilities:
+
+    Add Repository
+    Drop Repository
+    Add Build
+    Drop Build
+    Schedule a build
+    Display status
+
+ Data structures:
+
+    DB:
+
+        (see: data/sql/)
+
+    Filesystem:
+
+        tests/   <-- directory where test-result-data is stored (can be named differently).
+        tests/repository_id/
+        tests/repository_id/revision_id/
+        tests/repository_id/revision_id/info.yaml
+        tests/repository_id/revision_id/tests/    <-- directory where test results lay
+        tests/repository_id/revision_id/tests/ddd/    <-- directory where results of test with test_id % 1000
+        tests/repository_id/revision_id/tests/ddd/test_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
+        tests/repository_id/revision_id/tests/ddd/test_id-results.yaml    <-- actual test results, formatted in YAML
+
+ Config:
+
+ workspace
+    workspace repository
+
+ db
+    database - either a sqlite file or (in future) stuff needed for normal DB.
+
+ tests_results
+    directory where test-result-data is stored
+
+ Config file location:
+
+    $ENV{REKSIO_CONFIG}
+    ./.reksio
+    ./.reksio.conf
+    ~/.reksio
+    ~/.reksio.conf
+    /etc/reksio
+    /etc/reksio.conf
+

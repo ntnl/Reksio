@@ -1,0 +1,117 @@
+
+ Roadmap for v1.0
+
+[X] Bootstrap
+[X]     Script to create static test data
+[ ]     Setup module (create DB and directories) for test purposes
+[ ]     Read config
+[ ]     Connect to DB
+[ ] Configuration commands
+[ ]     Server setup command
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     Add repo
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     Drop repo
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     Add build
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     Drop build
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     Schedule a build
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ]     System status command
+[ ]         --help support
+[ ]         Implement guts
+[ ]         Automated test
+[ ] GIT vcs plugin
+[ ]     Working directory setup
+[ ]     Checkout revision functionality
+[ ]     Revisions list functionality
+[ ]     Automated test
+[ ] Test vcs plugin
+[ ]     Working directory setup
+[ ]     Checkout revision functionality
+[ ]     Revisions list functionality
+[ ]     Automated test
+[ ] Inspect function
+[ ]     Common initialization (config and help)
+[ ]     Checkout repository that is to be inspected
+[ ]     Get list of commits
+[ ]     Insert new commits into DB
+[ ]     Automated test
+[ ] Build function
+[ ]     Prepare for the build
+[ ]         Common initialization (config and help)
+[ ]         Read-in the configuration
+[ ]     Do the build
+[ ]         Checkout stuff to build
+[ ]         Run build command
+[ ]         Parse build results
+[ ]     Finish the build
+[ ]         Remove build directory
+[ ]         Dump results
+[ ]         Dump log
+[ ]     Automated test
+[ ] Report function
+[ ]     Prepare
+[ ]         Common initialization (config and help)
+[ ]         Find 'parent' revision
+[ ]         Load revision A and B metadata
+[ ]     Main functionality
+[ ]         Compare revision results
+[ ]         Decide if sending is needed
+[ ]     Send report, if needed
+[ ]         Prepare summaries
+[ ]         Send summaries
+[ ]     Automated test
+[ ] Dispatch functionality
+[ ]     Common initialization (config and help)
+[ ]     Implement 'Local' dispatcher
+[ ]     Run Inspect script
+[ ]     Run Build script
+[ ]         Execute the build command
+[ ]         Harvest test results and log
+[ ]     Run Report script
+[ ]     Automated test
+[ ] Release
+[ ]     Make a package
+[ ]     Register a domain
+[ ]     Make a (spartan) website
+[ ]     Generate docs
+[ ]     Generate source code dump
+[ ]     Generate coverage report
+[ ]     Upload documentation
+[ ]     Upload dumped code
+[ ]     Upload coverage report
+[ ]     Upload archive
+[ ]     Push news to social sites
+
+ Future ideas
+
+ * Dispatch commands in paralel (more, then one command at once)
+ * 'subversion' vcs support
+ * Web UI
+ * 'archive' vcs support (supporting both file:// and http://)
+ * 'ssh' dispatcher
+ * 'gearman' dispatcher
+ * 'html' reports
+ * 'xml' reports
+ * 'yaml' reports
+ * 'json' reports
+ * Web service to get the data
+ * Web service to remotely control the server
+ * If tests fail, compress working directory and store for later inspection.
+ * Ability to 'pause' and 'resume' (starting of) builds
+
