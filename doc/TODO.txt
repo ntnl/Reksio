@@ -4,8 +4,11 @@
 [X] Bootstrap
 [X]     Script to create static test data
 [X]     Setup module (create DB, directories and fake config) for test purposes
-[ ]     Read config
+[>]     Read config
 [ ]     Connect to DB
+[ ] Internet
+[ ]     Set-up git hub account
+[ ]     Register a domain
 [ ] Configuration commands
 [ ]     Server setup command
 [ ]         --help support
@@ -86,10 +89,10 @@
 [ ]     Run Report script
 [ ]     Automated test
 [ ] Release
-[ ]     Make a package
-[ ]     Register a domain
+[ ]     Make a package (Module::Build)
 [ ]     Make a (spartan) website
-[ ]     Generate docs
+[ ]     Generate docs (POD)
+[ ]     Check README (possibly create)
 [ ]     Generate source code dump
 [ ]     Generate coverage report
 [ ]     Upload documentation
