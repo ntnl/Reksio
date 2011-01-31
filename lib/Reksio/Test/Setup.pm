@@ -49,7 +49,9 @@ sub fake_installation { # {{{
     Reksio::Core::Config::set_config_option('workspace',     $basedir . q{workspace/});
     Reksio::Core::Config::set_config_option('build_results', $basedir . q{builds/});
 
-    Reksio::Core::Config::set_config_option('db', $basedir . q{db/db.sqlite});
+    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $basedir . q{db/db.sqlite});
+    
+    Reksio::Core::Config::set_config_option('configured', 1);
 
     return $basedir;
 } # }}}
