@@ -4,30 +4,35 @@
 [X] Bootstrap
 [X]     Script to create static test data
 [X]     Setup module (create DB, directories and fake config) for test purposes
-[>]     Read config
-[ ]     Connect to DB
-[ ] Internet
-[ ]     Set-up git hub account
+[X]     Read config
+[X]     Connect to DB
+[-] Internet
+[X]     Set-up git hub account
 [ ]     Register a domain
-[ ] Configuration commands
-[ ]     Server setup command
-[ ]         --help support
-[ ]         Implement guts
-[ ]         Automated test
-[ ]     Add repo
-[ ]         --help support
+[>] Configuration commands
+[>]     Add repo
+[>]         --help support
+[ ]         Reksio::API::Metadata
+[ ]             Implement get_repository
+[ ]             Implement add_repository
 [ ]         Implement guts
 [ ]         Automated test
 [ ]     Drop repo
 [ ]         --help support
+[ ]         Implement Reksio::API::Metadata::delete_repository
 [ ]         Implement guts
 [ ]         Automated test
 [ ]     Add build
 [ ]         --help support
+[ ]         Reksio::API::Metadata
+[ ]             Implement get_build
+[ ]             Implement get_builds
+[ ]             Implement add_build
 [ ]         Implement guts
 [ ]         Automated test
 [ ]     Drop build
 [ ]         --help support
+[ ]         Implement Reksio::API::Metadata::delete_build
 [ ]         Implement guts
 [ ]         Automated test
 [ ]     Schedule a build

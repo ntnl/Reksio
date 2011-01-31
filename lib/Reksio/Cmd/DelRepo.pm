@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+package Reksio;
 ################################################################################
 # 
 # Reksio - continuous integration and testing server
@@ -12,14 +12,24 @@
 # 
 ################################################################################
 use strict; use warnings; # {{{
-use FindBin qw( $Bin );
-use lib $Bin .q{/../lib/}; # FIXME: Should not be necessarily.
 
 my $VERSION = '0.1.0';
 
-use Reksio::Cmd::AddRepo;
+use Reksio::Cmd;
 # }}}
 
-exit Reksio::Cmd::AddRepo::main(@ARGV);
+sub main { # {{{
+    my (@params) = @_;
+
+    my @param_config = (
+    );
+
+    my $options = ( Reksio::Cmd::main(\@param_config, @params) or return 0 );
+
+
+    return 0;
+} # }}}
+
 
 # vim: fdm=marker
+1;
