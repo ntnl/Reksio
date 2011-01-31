@@ -15,38 +15,23 @@ use strict; use warnings; # {{{
 use FindBin qw( $Bin );
 use lib $Bin .q{/../../lib};
 
-use Reksio::Core::Config;
+use Reksio::Test::Setup qw( fake_installation );
 
 use Test::More;
 # }}}
 
+use Reksio::API::Config qw( get_config_option );
+
 plan tests =>
-    + 1 # set_config_option
-    + 2 # configure
+    + 1 # get_config_option
 ;
 
-is(
-    Reksio::Core::Config::set_config_option('workspace', '/tmp/'),
-    '/tmp/',
-    'set_config_option'
-);
+my $basedir = fake_installation($Bin .q{/../../t_data/});
 
-$ENV{'REKSIO_CONFIG'} = '/tmp/test.conf';
-
-my $fh;
-open $fh, q{>}, $ENV{'REKSIO_CONFIG'};
-print $fh q{workspace: tmp};
-close $fh;
-
-is(
-    Reksio::Core::Config::configure(),
-    '/tmp/test.conf',
-    'configure() found the config file'
-);
-is(
-    Reksio::Core::Config::configure(),
-    undef,
-    'configure() will not re-configure'
+like(
+    get_config_option('workspace'),
+    qr{^/tmp/},
+    q{get_config_option: seems to return something sane.}
 );
 
 # vim: fdm=marker

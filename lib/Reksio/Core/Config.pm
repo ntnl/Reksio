@@ -16,7 +16,7 @@ use strict; use warnings; # {{{
 my $VERSION = '0.1.0';
 
 use Carp::Assert::More qw( assert_defined );
-use YAML::Any qw( Load );
+use YAML::Any qw( LoadFile );
 # }}}
 
 my %configuration = ();
@@ -29,7 +29,7 @@ sub set_config_option { # {{{
     return $value;
 } # }}}
 
-sub find_config { # {{{
+sub _find_config { # {{{
     my @choices = (
         $ENV{'REKSIO_CONFIG'},
         q{./.reksio.conf},
@@ -37,13 +37,16 @@ sub find_config { # {{{
         q{/etc/reksio.conf},
     );
 
+    my $config_path;
     foreach my $path (@choices) {
         if (-f $path) {
-            return $path;
+            $config_path = $path;
+
+            last;
         }
     }
 
-    return;
+    return $config_path;
 } # }}}
 
 sub configure { # {{{
@@ -51,9 +54,11 @@ sub configure { # {{{
         return;
     }
 
-    my $config_file_path = find_config();
+    my $config_file_path = _find_config();
 
-    my $config_src = Load($config_file_path);
+    assert_defined($config_file_path, "Config file was found."); # FIXME: handle in more User-friendly name.
+
+    my $config_src = LoadFile($config_file_path);
 
     assert_defined($config_src->{'workspace'}, 'workspace is defined');
 
@@ -61,7 +66,17 @@ sub configure { # {{{
     #   Options 'build_results' and 'db' are mandatory for server.
     #   Workers require only 
 
-    return $configuration{'configured'} = 1;
+    $configuration{'configured'} = 1;
+
+    return $config_file_path;
+} # }}}
+
+sub get_config_option { # {{{
+    my ( $name ) = @_;
+
+    assert_defined($name);
+
+    return $configuration{$name};
 } # }}}
 
 # vim: fdm=marker
