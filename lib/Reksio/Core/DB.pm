@@ -20,9 +20,11 @@ use Reksio::API::Config qw( get_config_option );
 use Carp::Assert::More qw( assert_defined );
 use DBI;
 use English qw( -no_match_vars );
+use SQL::Abstract;
 # }}}
 
 my $dbh;
+my $abstract;
 
 sub get_dbh { # {{{
     if ($dbh) {
@@ -45,7 +47,23 @@ sub get_dbh { # {{{
     }
     # FIXME: Notify the User, that He has not configured db properly :(
 
+    # Prepare the SQL::Abstract object as well, for later use :)
+    $abstract = SQL::Abstract->new();
+
     return $dbh;
+} # }}}
+
+# Notes:
+#   $stuff - can be a hashref, or arrayref.
+sub do_insert { # {{{
+    my ($table, $stuff) = @_;
+
+    my $_dbh = get_dbh();
+
+    my($stmt, @bind) = $abstract->insert($table, $stuff);
+    $_dbh->do($stmt, {}, @bind);
+
+    return $_dbh->last_insert_id(undef, undef, undef, undef);
 } # }}}
 
 # vim: fdm=marker

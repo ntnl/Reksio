@@ -4,16 +4,17 @@ CREATE TABLE reksio_Metadata (
 );
 
 CREATE TABLE reksio_Repository (
-    id      INT,
+    id      INTEGER PRIMARY KEY,
 
     name    VARCHAR(128),
     vcs     VARCHAR(32),
     uri     VARCHAR(1024)
 );
+CREATE UNIQUE INDEX reksio_Repository_name ON reksio_Repository (name);
 
 CREATE TABLE reksio_Build (
-    id              INT,
-    repository_id   INT,
+    id              INTEGER PRIMARY KEY,
+    repository_id   INTEGER,
 
     name            VARCHAR(128),
     build_command   VARCHAR(1024),
@@ -28,21 +29,26 @@ CREATE TABLE reksio_Build (
         -- EXITCODE - buld was successful if command's exit code was zero.
         -- POD - parse output as POD, and judge results by that.
 );
+CREATE UNIQUE INDEX reksio_Build_name ON reksio_Build (name, repository_id);
 
 CREATE TABLE reksio_Revision (
-    id              INT,
-    repository_id   INT,
+    id              INTEGER PRIMARY KEY,
+    repository_id   INTEGER,
 
     commit_id           VARCHAR(128),
     parent_commit_id    VARCHAR(128),
 
-    was_tested          INT
+    status CHAR(1)
+        -- N - new (not touched)
+        -- S - all mandatory builds for this revision have been scheduled
+        -- B - all scheduled builds complete
 );
+CREATE UNIQUE INDEX reksio_Revision_commit_id ON reksio_Revision (repository_id, commit_id);
 
 CREATE TABLE reksio_Result (
-    id              INT,
-    revision_id     INT,
-    build_id        INT,
+    id              INTEGER PRIMARY KEY,
+    revision_id     INTEGER,
+    build_id        INTEGER,
 
     status  CHAR(1),
         -- N - New (scheduled for execution)
@@ -53,9 +59,9 @@ CREATE TABLE reksio_Result (
     date_queued         DATETIME,
     date_start          DATETIME,
     date_finish         DATETIME,
-    total_tests_count   INT,
-    total_cases_count   INT,
-    failed_tests_count  INT,
-    failed_cases_count  INT
+    total_tests_count   INTEGER,
+    total_cases_count   INTEGER,
+    failed_tests_count  INTEGER,
+    failed_cases_count  INTEGER
 );
 
