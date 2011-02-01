@@ -21,10 +21,9 @@ use Reksio::Cmd;
 sub main { # {{{
     my (@params) = @_;
 
-    my @param_config = (
-    );
+    my @param_config = ();
 
-    my $options = ( Reksio::Cmd::main(\@param_config, @params) or return 0 );
+    my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
 
     return 0;

@@ -1,4 +1,4 @@
-package Reksio;
+package Reksio::Cmd::DelBuild;
 ################################################################################
 # 
 # Reksio - continuous integration and testing server
@@ -22,9 +22,13 @@ sub main { # {{{
     my (@params) = @_;
 
     my @param_config = (
+        {
+            param => q{build},
+            desc  => q{Build name (label).},
+        },
     );
 
-    my $options = ( Reksio::Cmd::main(\@param_config, @params) or return 0 );
+    my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
 
     return 0;

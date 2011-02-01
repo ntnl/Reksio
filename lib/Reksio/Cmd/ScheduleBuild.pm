@@ -1,4 +1,4 @@
-package Reksio;
+package Reksio::Cmd::ScheduleBuild;
 ################################################################################
 # 
 # Reksio - continuous integration and testing server
@@ -21,10 +21,14 @@ use Reksio::Cmd;
 sub main { # {{{
     my (@params) = @_;
 
-    my @params = (
+    my @param_config = (
+        {
+            param => q{build},
+            desc  => q{Build name (label).},
+        },
     );
 
-    my $options = ( Reksio::Cmd::main(@params) or return 0 );
+    my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
 
     return 0;

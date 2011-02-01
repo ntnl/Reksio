@@ -1,4 +1,4 @@
-package Reksio;
+package Reksio::Cmd::AddRepo;
 ################################################################################
 # 
 # Reksio - continuous integration and testing server
@@ -22,9 +22,21 @@ sub main { # {{{
     my (@params) = @_;
 
     my @param_config = (
+        {
+            param => q{repo},
+            desc  => q{Repository name (label).},
+        },
+        {
+            param => q{vcs},
+            desc  => q{Version control system.},
+        },
+        {
+            param => q{uri},
+            desc  => q{Location of the repository.},
+        }
     );
 
-    my $options = ( Reksio::Cmd::main(\@param_config, @params) or return 0 );
+    my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
 
     return 0;
