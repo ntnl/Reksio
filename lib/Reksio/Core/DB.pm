@@ -40,12 +40,15 @@ sub get_dbh { # {{{
         PrintError => 1
     };
 
+    assert_defined($db_config_string, "Database configured.");
+
     if ($db_config_string =~ m{^sqlite:(.+?)$}s ) {
         my $filename = $1;
 
         $dbh = DBI->connect(q{dbi:SQLite:dbname=}. $filename, q{}, q{}, $options);
     }
-    # FIXME: Notify the User, that He has not configured db properly :(
+
+    assert_defined($dbh, "Have DB connection.");
 
     # Prepare the SQL::Abstract object as well, for later use :)
     $abstract = SQL::Abstract->new();
@@ -64,6 +67,32 @@ sub do_insert { # {{{
     $_dbh->do($stmt, {}, @bind);
 
     return $_dbh->last_insert_id(undef, undef, undef, undef);
+} # }}}
+
+sub do_select { # {{{
+    my ($table, $columns, $where, $order) = @_;
+
+    my $_dbh = get_dbh();
+
+    my($stmt, @bind) = $abstract->select($table, $columns, $where, $order);
+
+    my $sth = $_dbh->prepare($stmt);
+    $sth->execute(@bind);
+
+    return $sth;
+} # }}}
+
+sub do_delete { # {{{
+    my ($table, $where) = @_;
+
+    my $_dbh = get_dbh();
+
+    my($stmt, @bind) = $abstract->delete($table, $where);
+
+    my $sth = $_dbh->prepare($stmt);
+    $sth->execute(@bind);
+
+    return;
 } # }}}
 
 # vim: fdm=marker

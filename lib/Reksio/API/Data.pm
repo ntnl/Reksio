@@ -18,6 +18,7 @@ my $VERSION = '0.1.0';
 
 use Reksio::Core::DB;
 
+use Carp::Assert::More qw( assert_defined );
 use Params::Validate qw( :all );
 # }}}
 
@@ -69,70 +70,108 @@ sub get_repository { # {{{
     my %P = validate(
         @_,
         {
-            name => { type=>SCALAR },  # VARCHAR(128),
-            vcs  => { type=>SCALAR },  # VARCHAR(32),
-            uri  => { type=>SCALAR },  # VARCHAR(1024)
+            name => { type=>SCALAR, optional=>1 },
+            id   => { type=>SCALAR, optional=>1 },
         },
     );
+
+    assert_defined( ( $P{'name'} or $P{'id'} ), "One (and only one) is defined: name or id");
+    assert_defined(  not ( $P{'name'} and $P{'id'} ), "Only one is defined: name or id");
+    
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Repository',
+        [qw( id name vcs uri )],
+        \%P,
+    );
+    my $repo = $sth->fetchrow_hashref();
+
+    return $repo;
 } # }}}
 
-sub get_repositories { # {{{
-} # }}}
+# TODO
+#sub get_repositories { # {{{
+#} # }}}
 
-=stubs
-
+# TODO: What, if repo has builds?
 sub delete_repository { # {{{
+    my %P = validate(
+        @_,
+        {
+            name => { type=>SCALAR, optional=>1 },
+            id   => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    assert_defined( ( $P{'name'} or $P{'id'} ), "One (and only one) is defined: name or id");
+    assert_defined(  not ( $P{'name'} and $P{'id'} ), "Only one is defined: name or id");
+
+    Reksio::Core::DB::do_delete(
+        'reksio_Repository',
+        \%P,
+    );
+
+    return;
 } # }}}
 
 
 
 
 
-sub add_build { # {{{
-} # }}}
+# TODO
+#sub add_build { # {{{
+#} # }}}
 
-sub get_build { # {{{
-} # }}}
+# TODO
+#sub get_build { # {{{
+#} # }}}
 
-sub get_builds { # {{{
-} # }}}
+# TODO
+#sub get_builds { # {{{
+#} # }}}
 
-sub delete_build { # {{{
-} # }}}
-
-
-
-
-
-sub add_revision { # {{{
-} # }}}
-
-sub get_revision { # {{{
-} # }}}
-
-sub get_revisions { # {{{
-} # }}}
-
-sub delete_revision { # {{{
-} # }}}
+# TODO
+#sub delete_build { # {{{
+#} # }}}
 
 
 
 
 
-sub add_result { # {{{
-} # }}}
+# TODO
+#sub add_revision { # {{{
+#} # }}}
 
-sub get_result { # {{{
-} # }}}
+# TODO
+#sub get_revision { # {{{
+#} # }}}
 
-sub get_results { # {{{
-} # }}}
+# TODO
+#sub get_revisions { # {{{
+#} # }}}
 
-sub delete_result { # {{{
-} # }}}
+# TODO
+#sub delete_revision { # {{{
+#} # }}}
 
-=cut
+
+
+
+
+# TODO
+#sub add_result { # {{{
+#} # }}}
+
+# TODO
+#sub get_result { # {{{
+#} # }}}
+
+# TODO
+#sub get_results { # {{{
+#} # }}}
+
+# TODO
+#sub delete_result { # {{{
+#} # }}}
 
 # vim: fdm=marker
 1;

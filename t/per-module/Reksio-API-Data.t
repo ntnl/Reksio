@@ -44,6 +44,7 @@ use Reksio::API::Data qw(
 
 plan tests =>
     + 2 # add_repository
+    + 4 # get_repository
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});
@@ -54,5 +55,35 @@ is($r1_id, 1, q{add_repository (1/2)});
 my $r2_id = add_repository(name => 'Second', vcs=>'GIT', uri=>'https://foo/bar.git');
 is($r2_id, 2, q{add_repository (2/2)});
 
+is(
+    get_repository( id=>123 ),
+    undef,
+    q{get_repository - by id (ask for not existing one)}
+);
+is(
+    get_repository( name=>'FooBarBaz' ),
+    undef,
+    q{get_repository - by name (ask for not existing one)}
+);
+is_deeply(
+    get_repository( id=>$r1_id ),
+    {
+        id   => $r1_id,
+        name => 'First',
+        vcs  => 'CVS',
+        uri  => 'cvs://foo/bar'
+    },
+    q{get_repository - by id (ask for existing one)}
+);
+is_deeply(
+    get_repository( name=>'Second' ),
+    {
+        id   => $r2_id,
+        name => 'Second',
+        vcs  => 'GIT',
+        uri  => 'https://foo/bar.git',
+    },
+    q{get_repository - by name (ask for existing one)}
+);
 
 # vim: fdm=marker

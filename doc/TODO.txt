@@ -10,23 +10,22 @@
 [X]     Set-up git hub account
 [ ]     Register a domain
 [>] Configuration commands
-[>]     Add repo
+[X]     Add repo
 [X]         --help support
-[>]         Reksio::API::Data
+[X]         Reksio::API::Data
 [X]             Implement add_repository
-[>]             Implement get_repository
-[ ]         Implement guts
-[ ]         Automated test
-[>]     Drop repo
+[X]             Implement get_repository
+[X]         Implement guts
+[X]         Automated test
+[X]     Drop repo
 [X]         --help support
-[ ]         Implement Reksio::API::Data::delete_repository
-[ ]         Implement guts
-[ ]         Automated test
+[X]         Implement Reksio::API::Data::delete_repository
+[X]         Implement guts
+[X]         Automated test
 [>]     Add build
 [X]         --help support
-[ ]         Reksio::API::Data
-[ ]             Implement get_build
-[ ]             Implement get_builds
+[>]         Reksio::API::Data
+[>]             Implement get_build
 [ ]             Implement add_build
 [ ]         Implement guts
 [ ]         Automated test
@@ -105,6 +104,10 @@
 [ ]     Upload coverage report
 [ ]     Upload archive
 [ ]     Push news to social sites
+
+ Known issues to be resolved
+
+ * more strict validation of input parameters (at the moment, Reksio trusts the User)
 
  Future ideas
 

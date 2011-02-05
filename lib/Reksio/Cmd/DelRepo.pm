@@ -15,6 +15,7 @@ use strict; use warnings; # {{{
 
 my $VERSION = '0.1.0';
 
+use Reksio::API::Data qw( get_repository delete_repository );
 use Reksio::Cmd;
 # }}}
 
@@ -25,11 +26,26 @@ sub main { # {{{
         {
             param => q{repo},
             desc  => q{Repository name (label).},
+            type  => q{s},
         },
     );
 
     my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
+    my $existing_repo = get_repository(
+        name => $options->{'repo'}
+    );
+    if (not $existing_repo) {
+        print STDERR q{Error: Repository with name '} . $options->{'repo'} . qq{' does not exist.\n};
+
+        return 1;
+    }
+
+    delete_repository(
+        name => $options->{'repo'}
+    );
+    
+    print "Repository deleted.\n";
 
     return 0;
 } # }}}

@@ -23,22 +23,22 @@ sub main { # {{{
 
     my @param_config = (
         {
+            param => q{name},
+            desc  => q{Build name (label).},
+        },
+        {
             param => q{repo},
             desc  => q{Parent repository name (label).},
         },
         {
-            param => q{build},
-            desc  => q{Build name (label).},
+            param => q{frequency},
+            desc  => q{How ofter to run the build (EACH, RECENT, HOURLY, DAILY).},
         },
         {
             param => q{build_command},
             desc  => q{Command executed to do the build},
 
             margin => 1,
-        },
-        {
-            param => q{frequency},
-            desc  => q{How ofter to run the build (EACH, RECENT, HOURLY, DAILY).},
         },
         {
             param => q{result_type},

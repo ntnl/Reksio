@@ -42,7 +42,12 @@ sub main { # {{{
     foreach my $param_def (@{ $param_config }) {
         $options{ $param_def->{'param'} } = q{};
 
-        $cfg{ $param_def->{'param'} } = \$options{ $param_def->{'param'} };
+        my $cfg_string = $param_def->{'param'};
+        if ($param_def->{'type'}) {
+            $cfg_string .= q{=} . $param_def->{'type'};
+        }
+
+        $cfg{ $cfg_string } = \$options{ $param_def->{'param'} };
     }
 
     GetOptionsFromArray($argv_params, %cfg);
@@ -51,12 +56,12 @@ sub main { # {{{
         # Make sure, that the first option has a margin:
         $param_config->[0]->{'margin'} = 1;
 
-        print STDERR "Usage:\n";
-        print STDERR qq{\t} . $PROGRAM_NAME . qq{ [opts] [values]\n};
+        print "Usage:\n";
+        print qq{\t} . $PROGRAM_NAME . qq{ [opts] [values]\n};
 
         foreach my $param_def (@{ $param_config }) {
             if ($param_def->{'margin'}) {
-                print STDERR "\n";
+                print "\n";
             }
 
             printf qq{    --%s\t%s\n}, $param_def->{'param'}, $param_def->{'desc'};
@@ -65,9 +70,17 @@ sub main { # {{{
         return;
     }
     if ($options{'version'}) {
-        print STDERR qq{$PROGRAM_NAME version: $VERSION\n};
+        print qq{$PROGRAM_NAME version: $VERSION\n};
 
         return;
+    }
+    
+    foreach my $param_def (@{ $param_config }) {
+        if ($param_def->{'required'} and not $options{ $param_def->{'param'} }) {
+            print STDERR q{Command line parameter: '} . $param_def->{'param'} . qq{' was not found, but it is required.\n};
+
+            return;
+        }
     }
 
     return \%options;
