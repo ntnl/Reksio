@@ -53,6 +53,7 @@ stderr_like {
 } qr{was not found}s, q{crash test - missing param};
 
 
+
 stdout_like {
     $exit_code = Reksio::Cmd::AddRepo::main('--name=Tst1', '--vcs=GIT', '--uri=http://ex.ample/ts.git'),
 } qr{Repository added}s, q{add - clean exit (1/2)};
@@ -60,14 +61,14 @@ stdout_like {
 is(
     $exit_code,
     0,
-    q{add - exit code (2/2)},
+    q{add - exit code (1/2)},
 );
 
 
 
 stderr_like {
     $exit_code = Reksio::Cmd::AddRepo::main('--name=First', '--vcs=CVS', '--uri=cvs://ex.ample/'),
-} qr{Repository .+? already exists\.}s, q{deny - coliding name - clean exit (1/2)};
+} qr{Repository .+? already exists\.}s, q{deny - coliding name - clean exit (2/2)};
 
 is(
     $exit_code,

@@ -15,6 +15,7 @@ use strict; use warnings; # {{{
 
 my $VERSION = '0.1.0';
 
+use Reksio::API::Data qw( get_repository get_build add_build );
 use Reksio::Cmd;
 # }}}
 
@@ -25,33 +26,77 @@ sub main { # {{{
         {
             param => q{name},
             desc  => q{Build name (label).},
+            type  => q{s},
+
+            required => 1,
         },
         {
             param => q{repo},
             desc  => q{Parent repository name (label).},
-        },
-        {
-            param => q{frequency},
-            desc  => q{How ofter to run the build (EACH, RECENT, HOURLY, DAILY).},
+            type  => q{s},
+
+            required => 1,
         },
         {
             param => q{build_command},
             desc  => q{Command executed to do the build},
+            type  => q{s},
+
+            required => 1,
 
             margin => 1,
         },
         {
+            param => q{frequency},
+            desc  => q{How ofter to run the build (EACH, RECENT, HOURLY, DAILY).},
+            type  => q{s},
+
+            required => 1,
+        },
+        {
             param => q{result_type},
             desc  => q{Expected output format (NONE, EXITCODE, POD).},
+            type  => q{s},
+
+            required => 1,
         },
     );
 
     my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
+    # Check if the repository exists.
+    my $existing_repo = get_repository(
+        name => $options->{'repo'}
+    );
+    if (not $existing_repo) {
+        print STDERR q{Error: Repository with name '} . $options->{'repo'} . qq{' does not exists.\n};
+
+        return 1;
+    }
+
+    my $existing_build = get_build(
+        repository_id => $existing_repo->{'id'},
+        name          => $options->{'name'}
+    );
+    if ($existing_build) {
+        print STDERR q{Error: Build with name '} . $options->{'name'} . q{' already exists in repository '} . $existing_repo->{'name'} . qq{'.\n};
+
+        return 1;
+    }
+
+    my $id = add_build(
+        repository_id => $existing_repo->{'id'},
+
+        name          => $options->{'name'},
+        frequency     => $options->{'frequency'},
+        build_command => $options->{'build_command'},
+        result_type   => $options->{'result_type'},
+    );
+
+    print "Build added (ID: $id)\n";
 
     return 0;
 } # }}}
-
 
 # vim: fdm=marker
 1;

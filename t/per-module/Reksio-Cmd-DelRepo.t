@@ -28,8 +28,8 @@ plan tests =>
     + 1 # run with no params
     + 1 # check --help
     + 1 # check --version
-    + 2 # add a repo
-    + 2 # adding repo with existing name is not possible
+    + 2 # del a repo
+    + 2 # del a nonexisting repo
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});

@@ -117,21 +117,81 @@ sub delete_repository { # {{{
 
 
 
-# TODO
-#sub add_build { # {{{
-#} # }}}
+sub add_build { # {{{
+    my %P = validate(
+        @_,
+        {
+            repository_id => { type=>SCALAR },
+            name          => { type=>SCALAR },
 
-# TODO
-#sub get_build { # {{{
-#} # }}}
+            build_command => { type=>SCALAR },
+
+            frequency   => { type=>SCALAR },
+            result_type => { type=>SCALAR },
+        },
+    );
+    
+    return Reksio::Core::DB::do_insert(
+        'reksio_Build',
+        {
+            name          => $P{'name'},
+            repository_id => $P{'repository_id'},
+
+            build_command => $P{'build_command'},
+
+            frequency   => $P{'frequency'},
+            result_type => $P{'result_type'},
+        }
+    );
+} # }}}
+
+sub get_build { # {{{
+    my %P = validate(
+        @_,
+        {
+            name          => { type=>SCALAR, optional=>1 },
+            repository_id => { type=>SCALAR, optional=>1 },
+            id            => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    assert_defined( ( ( $P{'name'} and $P{'repository_id'} ) or $P{'id'} ),   "One (and only one) is defined: name+repo or id");
+    assert_defined(  not ( $P{'name'} and $P{'repository_id'} and $P{'id'} ), "Only one is defined: name+repo or id");
+    
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Build',
+        [qw( id name repository_id build_command frequency result_type )],
+        \%P,
+    );
+    my $repo = $sth->fetchrow_hashref();
+
+    return $repo;
+} # }}}
 
 # TODO
 #sub get_builds { # {{{
 #} # }}}
 
-# TODO
-#sub delete_build { # {{{
-#} # }}}
+sub delete_build { # {{{
+    my %P = validate(
+        @_,
+        {
+            name          => { type=>SCALAR, optional=>1 },
+            repository_id => { type=>SCALAR, optional=>1 },
+            id            => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    assert_defined( ( ( $P{'name'} and $P{'repository_id'} ) or $P{'id'} ),   "One (and only one) is defined: name+repo or id");
+    assert_defined(  not ( $P{'name'} and $P{'repository_id'} and $P{'id'} ), "Only one is defined: name+repo or id");
+
+    my $sth = Reksio::Core::DB::do_delete(
+        'reksio_Build',
+        \%P,
+    );
+
+    return;
+} # }}}
 
 
 

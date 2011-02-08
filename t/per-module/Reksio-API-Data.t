@@ -45,9 +45,19 @@ use Reksio::API::Data qw(
 plan tests =>
     + 2 # add_repository
     + 4 # get_repository
+
+    + 3 # add_build
+    + 4 # get_build
+    + 2 # delete_build
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});
+
+################################################################################
+#
+#                       Repository level tests
+#
+################################################################################
 
 my $r1_id = add_repository(name => 'First', vcs=>'CVS', uri=>'cvs://foo/bar');
 is($r1_id, 1, q{add_repository (1/2)});
@@ -84,6 +94,96 @@ is_deeply(
         uri  => 'https://foo/bar.git',
     },
     q{get_repository - by name (ask for existing one)}
+);
+
+################################################################################
+#
+#                       Build level tests
+#
+################################################################################
+
+my $b1_id = add_build(
+    repository_id => $r1_id,
+
+    name          => 'Integrate',
+    build_command => 'prove',
+
+    frequency   => 'EACH',
+    result_type => 'NONE'
+);
+is ($b1_id, 1, q{add_build (1/3)});
+
+my $b2_id = add_build(
+    repository_id => $r1_id,
+
+    name          => q{Coverage test},
+    build_command => q{prove_cover},
+
+    frequency   => 'RECENT',
+    result_type => 'EXITCODE'
+);
+is ($b2_id, 2, q{add_build (2/3)});
+
+my $b3_id = add_build(
+    repository_id => $r2_id,
+
+    name          => q{Run tests},
+    build_command => q{./t/run_tests.sh},
+
+    frequency   => 'DAILY',
+    result_type => 'POD'
+);
+is ($b3_id, 3, q{add_build (3/3)});
+
+is(
+    get_build(id=>1234),
+    undef,
+    q{get_build - by ID - nonexisting build}
+);
+is_deeply(
+    get_build(id=>$b2_id),
+    {
+        id            => $b2_id,
+        repository_id => $r1_id,
+
+        name          => q{Coverage test},
+        build_command => q{prove_cover},
+
+        frequency   => 'RECENT',
+        result_type => 'EXITCODE',
+    },
+    q{get_build - by ID - existing build}
+);
+
+is(
+    get_build(repository_id => 123, name => q{Foo}),
+    undef,
+    q{get_build - by name - nonexisting build}
+);
+is_deeply(
+    get_build(repository_id => $r2_id, name => q{Run tests}),
+    {
+        id            => $b3_id,
+        repository_id => $r2_id,
+
+        name          => q{Run tests},
+        build_command => q{./t/run_tests.sh},
+
+        frequency   => 'DAILY',
+        result_type => 'POD',
+    },
+    q{get_build - by name - existing build}
+);
+
+is(
+    delete_build(id => $b1_id),
+    undef,
+    'delete_build - returns undef'
+);
+is(
+    get_build(id => $b1_id),
+    undef,
+    q{delete_build - really deletes}
 );
 
 # vim: fdm=marker

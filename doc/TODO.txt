@@ -22,24 +22,28 @@
 [X]         Implement Reksio::API::Data::delete_repository
 [X]         Implement guts
 [X]         Automated test
-[>]     Add build
+[X]     Add build
 [X]         --help support
-[>]         Reksio::API::Data
-[>]             Implement get_build
-[ ]             Implement add_build
-[ ]         Implement guts
-[ ]         Automated test
-[>]     Drop build
+[X]         Reksio::API::Data
+[X]             Implement get_build
+[X]             Implement add_build
+[X]         Implement guts
+[X]         Automated test
+[X]     Drop build
 [X]         --help support
-[ ]         Implement Reksio::API::Data::delete_build
-[ ]         Implement guts
-[ ]         Automated test
+[X]         Implement Reksio::API::Data::delete_build
+[X]         Implement guts
+[X]         Automated test
 [>]     Schedule a build
 [X]         --help support
+[>]         Implement Reksio::API::Data::schedule_build
 [ ]         Implement guts
 [ ]         Automated test
 [>]     System status command
 [X]         --help support
+[ ]         Implement Reksio::API::Data::get_repositories
+[ ]         Implement Reksio::API::Data::get_builds
+[ ]         Implement Reksio::API::Data::get_results
 [ ]         Implement guts
 [ ]         Automated test
 [ ] GIT vcs plugin
