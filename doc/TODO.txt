@@ -34,18 +34,11 @@
 [X]         Implement Reksio::API::Data::delete_build
 [X]         Implement guts
 [X]         Automated test
-[>]     Schedule a build
+[X]     Schedule a build
 [X]         --help support
-[>]         Implement Reksio::API::Data::schedule_build
-[ ]         Implement guts
-[ ]         Automated test
-[>]     System status command
-[X]         --help support
-[ ]         Implement Reksio::API::Data::get_repositories
-[ ]         Implement Reksio::API::Data::get_builds
-[ ]         Implement Reksio::API::Data::get_results
-[ ]         Implement guts
-[ ]         Automated test
+[X]         Implement Reksio::API::Data::schedule_build
+[X]         Implement guts
+[X]         Automated test
 [ ] GIT vcs plugin
 [ ]     Working directory setup
 [ ]     Checkout revision functionality
@@ -115,6 +108,8 @@
 
  Future ideas
 
+ * Command line utility to list repositories
+ * Command line utility to display server status (overall + detailed)
  * Dispatch commands in paralel (more, then one command at once)
  * 'subversion' vcs support
  * Web UI

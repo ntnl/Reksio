@@ -27,6 +27,8 @@ sub main { # {{{
             param => q{repo},
             desc  => q{Repository name (label).},
             type  => q{s},
+
+            required => 1,
         },
     );
 

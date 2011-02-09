@@ -38,7 +38,8 @@ our @EXPORT_OK = qw(
     get_revisions
     delete_revision
 
-    add_result
+    schedule_build
+
     get_result
     get_results
     delete_result
@@ -130,7 +131,7 @@ sub add_build { # {{{
             result_type => { type=>SCALAR },
         },
     );
-    
+
     return Reksio::Core::DB::do_insert(
         'reksio_Build',
         {
@@ -195,17 +196,55 @@ sub delete_build { # {{{
 
 
 
+sub add_revision { # {{{
+    my %P = validate(
+        @_,
+        {
+            repository_id => { type=>SCALAR },
 
+            commit_id        => { type=>SCALAR },
+            parent_commit_id => { type=>SCALAR },
+        },
+    );
 
-# TODO
-#sub add_revision { # {{{
-#} # }}}
+    return Reksio::Core::DB::do_insert(
+        'reksio_Revision',
+        {
+            repository_id => $P{'repository_id'},
 
-# TODO
-#sub get_revision { # {{{
-#} # }}}
+            repository_id => $P{'repository_id'},
 
-# TODO
+            commit_id        => $P{'commit_id'},
+            parent_commit_id => $P{'parent_commit_id'},
+
+            status => q{N},
+        }
+    );
+} # }}}
+
+sub get_revision { # {{{
+    my %P = validate(
+        @_,
+        {
+            id            => { type=>SCALAR, optional=>1 },
+            repository_id => { type=>SCALAR, optional=>1 },
+            commit_id     => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    assert_defined( ( $P{'id'} or ($P{'repository_id'} and $P{'commit_id'}) ), "One (and only one) is defined: id or repository_id+commit_id");
+    assert_defined(  not ( $P{'id'} and ($P{'repository_id'} and $P{'commit_id'}) ), "Only one is defined: id or repository_id+commit_id");
+
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Revision',
+        [qw( id repository_id commit_id parent_commit_id status )],
+        \%P,
+    );
+    my $rev = $sth->fetchrow_hashref();
+
+    return $rev;
+} # }}}
+
 #sub get_revisions { # {{{
 #} # }}}
 
@@ -217,9 +256,33 @@ sub delete_build { # {{{
 
 
 
-# TODO
-#sub add_result { # {{{
-#} # }}}
+sub schedule_build { # {{{
+    my %P = validate(
+        @_,
+        {
+            revision_id => { type=>SCALAR },
+            build_id    => { type=>SCALAR },
+        },
+    );
+    
+    return Reksio::Core::DB::do_insert(
+        'reksio_Result',
+        {
+            revision_id   => $P{'revision_id'},
+            build_id      => $P{'build_id'},
+
+            status => 'N',
+
+            date_queued        => 0, # FIXME!
+            date_start         => 0,
+            date_finish        => 0,
+            total_tests_count  => 0,
+            total_cases_count  => 0,
+            failed_tests_count => 0,
+            failed_cases_count => 0,
+        }
+    );
+} # }}}
 
 # TODO
 #sub get_result { # {{{

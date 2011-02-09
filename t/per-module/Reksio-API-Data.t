@@ -36,7 +36,8 @@ use Reksio::API::Data qw(
     get_revisions
     delete_revision
 
-    add_result
+    schedule_build
+
     get_result
     get_results
     delete_result
@@ -49,6 +50,11 @@ plan tests =>
     + 3 # add_build
     + 4 # get_build
     + 2 # delete_build
+
+    + 1 # add_revision
+    + 2 # get_revision
+
+    + 1 # schedule a build
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});
@@ -185,5 +191,66 @@ is(
     undef,
     q{delete_build - really deletes}
 );
+
+
+################################################################################
+#
+#                           Revision level tests
+#
+################################################################################
+
+my $rev;
+
+my $rev1_id = add_revision(
+    repository_id => $r1_id,
+
+    commit_id        => q{r0001},
+    parent_commit_id => q{},
+);
+is($rev1_id, 1, 'add_revision');
+
+$rev = get_revision( id=>$rev1_id );
+is_deeply(
+    $rev,
+    {
+        id => $rev1_id,
+
+        repository_id => $r1_id,
+
+        commit_id        => q{r0001},
+        parent_commit_id => q{},
+
+        status => 'N',
+    },
+    'get_revision - by ID',
+);
+
+$rev = get_revision(repository_id => $rev1_id, commit_id => q{r0001});
+is_deeply(
+    $rev,
+    {
+        id => $rev1_id,
+
+        repository_id => $r1_id,
+
+        commit_id        => q{r0001},
+        parent_commit_id => q{},
+
+        status => 'N',
+    },
+    'get_revision - by Commit ID',
+);
+
+################################################################################
+#
+#                           Result level tests
+#
+################################################################################
+
+my $res1_id = schedule_build(
+    revision_id => $rev1_id,
+    build_id    => $b1_id,
+);
+is ($res1_id, 1, 'schedule_build');
 
 # vim: fdm=marker
