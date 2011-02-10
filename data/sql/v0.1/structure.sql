@@ -37,6 +37,11 @@ CREATE TABLE reksio_Revision (
 
     commit_id           VARCHAR(128),
     parent_commit_id    VARCHAR(128),
+    
+    timestamp INT,
+    commiter  VARCHAR(250),
+
+    message TEXT,
 
     status CHAR(1)
         -- N - new (not touched)

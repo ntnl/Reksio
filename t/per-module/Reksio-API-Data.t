@@ -33,6 +33,7 @@ use Reksio::API::Data qw(
 
     add_revision
     get_revision
+    get_last_revision
     get_revisions
     delete_revision
 
@@ -53,6 +54,7 @@ plan tests =>
 
     + 1 # add_revision
     + 2 # get_revision
+    + 1 # get_last_revision
 
     + 1 # schedule a build
 ;
@@ -205,7 +207,11 @@ my $rev1_id = add_revision(
     repository_id => $r1_id,
 
     commit_id        => q{r0001},
-    parent_commit_id => q{},
+    parent_commit_id => undef,
+
+    commiter  => 'Bartłomiej Syguła',
+    message   => 'First test',
+    timestamp => '1297338154',
 );
 is($rev1_id, 1, 'add_revision');
 
@@ -218,14 +224,18 @@ is_deeply(
         repository_id => $r1_id,
 
         commit_id        => q{r0001},
-        parent_commit_id => q{},
+        parent_commit_id => undef,
+
+        commiter  => 'Bartłomiej Syguła',
+        message   => 'First test',
+        timestamp => '1297338154',
 
         status => 'N',
     },
     'get_revision - by ID',
 );
 
-$rev = get_revision(repository_id => $rev1_id, commit_id => q{r0001});
+$rev = get_revision(repository_id => $r1_id, commit_id => q{r0001});
 is_deeply(
     $rev,
     {
@@ -234,11 +244,46 @@ is_deeply(
         repository_id => $r1_id,
 
         commit_id        => q{r0001},
-        parent_commit_id => q{},
+        parent_commit_id => undef,
+
+        commiter  => 'Bartłomiej Syguła',
+        message   => 'First test',
+        timestamp => '1297338154',
 
         status => 'N',
     },
     'get_revision - by Commit ID',
+);
+
+my $rev2_id = add_revision(
+    repository_id => $r1_id,
+
+    commit_id        => q{r0002},
+    parent_commit_id => q{r0001},
+
+    timestamp => 1297338432,
+    commiter  => 'Bartłomiej Syguła',
+    message   => 'Third test "fixed" ;)',
+);
+
+$rev = get_last_revision(repository_id => $r1_id);
+is_deeply(
+    $rev,
+    {
+        id => $rev2_id,
+
+        repository_id => $r1_id,
+
+        commit_id        => q{r0002},
+        parent_commit_id => q{r0001},
+
+        timestamp => 1297338432,
+        commiter  => 'Bartłomiej Syguła',
+        message   => 'Third test "fixed" ;)',
+
+        status => 'N',
+    },
+    q{get_last_revision},
 );
 
 ################################################################################

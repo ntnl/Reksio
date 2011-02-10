@@ -35,6 +35,7 @@ our @EXPORT_OK = qw(
 
     add_revision
     get_revision
+    get_last_revision
     get_revisions
     delete_revision
 
@@ -203,7 +204,11 @@ sub add_revision { # {{{
             repository_id => { type=>SCALAR },
 
             commit_id        => { type=>SCALAR },
-            parent_commit_id => { type=>SCALAR },
+            parent_commit_id => { type=>SCALAR | UNDEF },
+
+            timestamp => { type=>SCALAR },
+            commiter  => { type=>SCALAR },
+            message   => { type=>SCALAR, optional=>1 },
         },
     );
 
@@ -216,6 +221,10 @@ sub add_revision { # {{{
 
             commit_id        => $P{'commit_id'},
             parent_commit_id => $P{'parent_commit_id'},
+
+            commiter  => $P{'commiter'},
+            message   => $P{'message'},
+            timestamp => $P{'timestamp'},
 
             status => q{N},
         }
@@ -237,7 +246,7 @@ sub get_revision { # {{{
 
     my $sth = Reksio::Core::DB::do_select(
         'reksio_Revision',
-        [qw( id repository_id commit_id parent_commit_id status )],
+        [qw( id repository_id commit_id parent_commit_id timestamp commiter message status )],
         \%P,
     );
     my $rev = $sth->fetchrow_hashref();
@@ -245,6 +254,27 @@ sub get_revision { # {{{
     return $rev;
 } # }}}
 
+sub get_last_revision { # {{{
+    my %P = validate(
+        @_,
+        {
+            repository_id => { type=>SCALAR },
+        },
+    );
+
+    my $sth = Reksio::Core::DB::prepare_and_execute(
+        q{SELECT * FROM reksio_Revision WHERE repository_id = ? ORDER BY timestamp DESC, id DESC LIMIT 1},
+        [
+            $P{'repository_id'},
+        ],
+    );
+
+    my $rev = $sth->fetchrow_hashref();
+
+    return $rev;
+} # }}}
+
+# TODO
 #sub get_revisions { # {{{
 #} # }}}
 

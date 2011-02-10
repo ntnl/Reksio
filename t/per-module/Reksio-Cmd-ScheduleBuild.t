@@ -61,13 +61,21 @@ my $rev1_id = add_revision(
     repository_id => $rep1_id,
 
     commit_id        => q{r0001},
-    parent_commit_id => q{},
+    parent_commit_id => undef,
+
+    commiter  => 'Bartłomiej Syguła',
+    message   => 'First test',
+    timestamp => '1297338154',
 );
 my $rev2_id = add_revision(
     repository_id => $rep1_id,
 
     commit_id        => q{r0002},
     parent_commit_id => q{r0001},
+
+    commiter  => 'Bartłomiej Syguła',
+    message   => 'Second commit',
+    timestamp => '1297347155',
 );
 
 

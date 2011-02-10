@@ -95,5 +95,18 @@ sub do_delete { # {{{
     return;
 } # }}}
 
+
+
+sub prepare_and_execute { # {{{
+    my ($stmt, $params) = @_;
+
+    my $_dbh = get_dbh();
+
+    my $sth = $_dbh->prepare($stmt);
+    $sth->execute(@{ $params });
+
+    return $sth;
+} # }}}
+
 # vim: fdm=marker
 1;
