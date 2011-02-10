@@ -33,5 +33,23 @@ sub new { # {{{
     return $self;
 } # }}}
 
+sub revisions { # {{{
+    my ( $self, $start_at ) = @_;
+
+    return $self->vcs_revisions($start_at);
+} # }}}
+
+sub checkout { # {{{
+    my ( $self, $sandbox_location, $commit_id) = @_;
+
+    return $self->vcs_checkout($sandbox_location, $commit_id);
+} # }}}
+
+sub uri { # {{{
+    my ( $self ) = @_;
+
+    return $self->{'uri'};
+} # }}}
+
 # vim: fdm=marker
 1;

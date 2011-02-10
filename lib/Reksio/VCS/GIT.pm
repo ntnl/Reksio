@@ -16,34 +16,58 @@ use base q{Reksio::VCS};
 
 my $VERSION = '0.1.0';
 
-use File::Slurp qw( read_file );
+use Digest::MD5 qw( md5_hex );
 use English qw( -no_match_vars );
+use File::Slurp qw( read_file );
+use Git::Repository qw( Log );
 # }}}
 
 sub vcs_revisions { # {{{
     my ($self, $start_at) = @_;
+    
+    my $repo = $self->_bare_copy_location();
 
-    my $lines = $self->_run(q{log}, $start_at .q{..HEAD});
-
-    my %revisions;
-    my $last_id;
-    foreach my $line (@{ $lines }) {
-        if ($line =~ m{commit ([^\s]+)}) {
-            $last_id = $1;
-
-            $revisions{$last_id} = {
-                commit_id => $last_id,
-            };
-
-            next;
-        }
+    my @logs;
+    if ($start_at) {
+        @logs = $repo->log( $start_at . q{..HEAD}, q{-n}, q{100} );
+    }
+    else {
+        @logs = $repo->log( q{-n}, q{100} );
     }
 
-    return [ values %revisions ];
+    my @revisions;
+    foreach my $item (@logs) {
+#        use Data::Dumper; warn Dumper $item;
+
+        my $message = $item->message();
+        chomp $message;
+
+        my $parent = undef;
+        if ($item->{'parent'}) {
+            $parent = $item->{'parent'}->[0];
+        }
+
+        push @revisions, {
+            commit_id => $item->commit(),
+
+            timestamp => $item->{'author_gmtime'},
+            commiter  => $item->{'committer_name'},
+            message   => $message,
+
+            parent    => $parent,
+        };
+    }
+
+    return \@revisions;
 } # }}}
 
 sub vcs_checkout { # {{{
-    my ($self, $revision) = @_;
+    my ($self, $sandbox_folder, $commit_id) = @_;
+
+    # FIXME: add --no-checkout
+    my $repo = Git::Repository->create(clone => $self->uri() => $sandbox_folder);
+
+    $repo->command('checkout', $commit_id);
 
     return;
 } # }}}
@@ -52,18 +76,24 @@ sub vcs_checkout { # {{{
 #                       Private methods.
 ################################################################################
 
-sub _run { # {{{
-    my ($self, @params) = @_;
+sub _bare_copy_location { # {{{
+    my ( $self ) = @_;
 
-    my $command = q{git} . join q{ }, map { q{'}.$_.q{'} } @params;
+    # Do We already have some bare copy?
+    if (not $self->{'VCS'}->{'Bare_Repo'}) {
+        my $_bare_copy_location = sprintf q{/tmp/bare_copy_%s_%d}, md5_hex($self->uri()), $PID;
 
-    my $pipe;
-    open $pipe, q{-|}, $command;
-    my @lines = read_file($pipe);
-    close $pipe;
+        # FIXME! Add --bare option!!!
+        $self->{'VCS'}->{'Bare_Repo'} = Git::Repository->create(clone => $self->uri() => $_bare_copy_location);
+    }
 
-    return \@lines;
+    return $self->{'VCS'}->{'Bare_Repo'};
 } # }}}
+
+END {
+    # Clean any bare copy, that We have created...
+    # TODO
+}
 
 # vim: fdm=marker
 1;
