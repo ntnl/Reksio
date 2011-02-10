@@ -44,13 +44,9 @@
 [X]     Checkout revision functionality
 [X]     Revisions list functionality
 [X]     Automated test
-[ ] Test vcs plugin
-[ ]     Working directory setup
-[ ]     Checkout revision functionality
-[ ]     Revisions list functionality
-[ ]     Automated test
-[ ] Inspect function
-[ ]     Common initialization (config and help)
+[>] Inspect function
+[X]     VCSFactory
+[>]     Common initialization (config and help)
 [ ]     Checkout repository that is to be inspected
 [ ]     Get list of commits
 [ ]     Insert new commits into DB
@@ -105,6 +101,7 @@
  Known issues to be resolved
 
  * more strict validation of input parameters (at the moment, Reksio trusts the User)
+ * some automated tests are based on GIT test repo. Those will not run, if someone has not installed git :(
 
  Future ideas
 
