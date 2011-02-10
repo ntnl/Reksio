@@ -9,7 +9,7 @@
 [-] Internet
 [X]     Set-up git hub account
 [ ]     Register a domain
-[>] Configuration commands
+[X] Configuration commands
 [X]     Add repo
 [X]         --help support
 [X]         Reksio::API::Data
@@ -39,8 +39,8 @@
 [X]         Implement Reksio::API::Data::schedule_build
 [X]         Implement guts
 [X]         Automated test
-[ ] GIT vcs plugin
-[ ]     Working directory setup
+[>] GIT vcs plugin
+[>]     Working directory setup
 [ ]     Checkout revision functionality
 [ ]     Revisions list functionality
 [ ]     Automated test
@@ -124,4 +124,5 @@
  * Web service to remotely control the server
  * If tests fail, compress working directory and store for later inspection.
  * Ability to 'pause' and 'resume' (starting of) builds
+ * Support for branches in GIT
 
