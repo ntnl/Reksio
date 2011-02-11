@@ -44,13 +44,13 @@
 [X]     Checkout revision functionality
 [X]     Revisions list functionality
 [X]     Automated test
-[>] Inspect function
+[X] Inspect function
 [X]     VCSFactory
-[>]     Common initialization (config and help)
-[ ]     Checkout repository that is to be inspected
-[ ]     Get list of commits
-[ ]     Insert new commits into DB
-[ ]     Automated test
+[X]     Common initialization (config and help)
+[X]     Checkout repository that is to be inspected
+[X]     Get list of commits
+[X]     Insert new commits into DB
+[X]     Automated test
 [ ] Build function
 [ ]     Prepare for the build
 [ ]         Common initialization (config and help)
@@ -102,6 +102,7 @@
 
  * more strict validation of input parameters (at the moment, Reksio trusts the User)
  * some automated tests are based on GIT test repo. Those will not run, if someone has not installed git :(
+ * tmp directory should be configurable in settings file
 
  Future ideas
 

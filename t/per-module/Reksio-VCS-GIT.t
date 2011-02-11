@@ -73,31 +73,31 @@ is_deeply(
             'message' => 'Third test "fixed" ;)',
         },
         {
+            'commit_id' => '815a65c4202092bd9f43f08c4d0090721224c2a0',
             'parent' => 'dfab002bc60ce992d235c0c3ecbeaad92c5e703c',
             'timestamp' => 1297338336,
             'commiter' => 'Bartłomiej Syguła',
-            'commit_id' => '815a65c4202092bd9f43f08c4d0090721224c2a0',
             'message' => 'Exec rights in place.',
         },
         {
+            'commit_id' => 'dfab002bc60ce992d235c0c3ecbeaad92c5e703c',
             'parent' => '0524ac242831389745960abefa3f4329a0f7e730',
             'timestamp' => 1297338310,
             'commiter' => 'Bartłomiej Syguła',
-            'commit_id' => 'dfab002bc60ce992d235c0c3ecbeaad92c5e703c',
             'message' => 'Third (failing) test added.',
         },
         {
+            'commit_id' => '0524ac242831389745960abefa3f4329a0f7e730',
             'parent' => 'adb6ac8a75cfb12c73261abbcd4a047759d61597',
             'timestamp' => 1297338216,
             'commiter' => 'Bartłomiej Syguła',
-            'commit_id' => '0524ac242831389745960abefa3f4329a0f7e730',
             'message' => 'Second test added.',
         },
         {
-            'commiter'  => 'Bartłomiej Syguła',
             'commit_id' => 'adb6ac8a75cfb12c73261abbcd4a047759d61597',
-            'message' => 'First test',
             'parent'     => undef,
+            'commiter'  => 'Bartłomiej Syguła',
+            'message' => 'First test',
             'timestamp' => '1297338154',
         },
     ], # }}}
@@ -108,10 +108,10 @@ is_deeply(
     $vcs_handler->revisions(q{dfab002bc60ce992d235c0c3ecbeaad92c5e703c}),
     [ # {{{
         {
+            'commit_id' => '3b06d05a012e8b25354e4d60498f07ce36962fb1',
             'parent' => '815a65c4202092bd9f43f08c4d0090721224c2a0',
             'timestamp' => 1297338432,
             'commiter' => 'Bartłomiej Syguła',
-            'commit_id' => '3b06d05a012e8b25354e4d60498f07ce36962fb1',
             'message' => 'Third test "fixed" ;)',
         },
         {

@@ -83,8 +83,13 @@ sub _bare_copy_location { # {{{
     if (not $self->{'VCS'}->{'Bare_Repo'}) {
         my $_bare_copy_location = sprintf q{/tmp/bare_copy_%s_%d}, md5_hex($self->uri()), $PID;
 
-        # FIXME! Add --bare option!!!
-        $self->{'VCS'}->{'Bare_Repo'} = Git::Repository->create(clone => $self->uri() => $_bare_copy_location);
+        if (-d $_bare_copy_location) {
+            $self->{'VCS'}->{'Bare_Repo'} = Git::Repository->new(git_dir => $_bare_copy_location .q{/.git});
+        }
+        else {
+            # FIXME! Add --bare option!!!
+            $self->{'VCS'}->{'Bare_Repo'} = Git::Repository->create(clone => $self->uri() => $_bare_copy_location);
+        }
     }
 
     return $self->{'VCS'}->{'Bare_Repo'};

@@ -19,10 +19,12 @@ my $VERSION = '0.1.0';
 use Reksio::Core::Config;
 
 use English qw( -no_match_vars );
+use Test::More;
 # }}}
 
 our @EXPORT_OK = qw(
     fake_installation
+    fake_repository
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
@@ -55,6 +57,29 @@ sub fake_installation { # {{{
 
     return $basedir;
 } # }}}
+
+my $repo_path;
+
+# Prepare the source test repository.
+# (FIXME) the way it's done is lame. But, hey! Let's get it running first!
+sub fake_repository { # {{{
+    my ( $bin ) = @_;
+
+    $repo_path = q{/tmp/git_test_repo_} . $PID . q{/};
+    mkdir $repo_path;
+    chdir $repo_path;
+    system q{tar}, q{xzf}, $bin .q{/../../t_data/test_repo.tgz};
+    chdir $bin;
+
+    return $repo_path . q{test_repo/};
+} # }}}
+
+END {
+    if ($repo_path) {
+        note("Cleaning test repo ($repo_path)");
+        system q{rm}, q{-rf}, $repo_path;
+    }
+}
 
 # vim: fdm=marker
 1;
