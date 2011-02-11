@@ -6,9 +6,9 @@
 [X]     Setup module (create DB, directories and fake config) for test purposes
 [X]     Read config
 [X]     Connect to DB
-[-] Internet
+[X] Internet
 [X]     Set-up git hub account
-[ ]     Register a domain
+[X]     Register a domain
 [X] Configuration commands
 [X]     Add repo
 [X]         --help support
