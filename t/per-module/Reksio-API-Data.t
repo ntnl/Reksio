@@ -41,6 +41,7 @@ use Reksio::API::Data qw(
 
     get_result
     get_results
+    update_result
     delete_result
 );
 
@@ -57,6 +58,8 @@ plan tests =>
     + 1 # get_last_revision
 
     + 1 # schedule a build
+    + 1 # get_result
+    + 1 # update_result
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});
@@ -301,6 +304,8 @@ is ($res1_id, 1, 'schedule_build');
 is_deeply(
     get_result(id=>$res1_id),
     {
+        id => $res1_id,
+
         revision_id => $rev1_id,
         build_id    => $b1_id,
 
@@ -316,5 +321,35 @@ is_deeply(
     },
     q{get_result}
 );
+
+update_result(
+    id => $res1_id,
+
+    status => q{N},
+
+    total_tests_count  => 25,
+    failed_tests_count => 5,
+);
+is_deeply(
+    get_result(id=>$res1_id),
+    {
+        id => $res1_id,
+
+        revision_id => $rev1_id,
+        build_id    => $b1_id,
+
+        status => 'N',
+
+        date_queued        => 0,
+        date_start         => 0,
+        date_finish        => 0,
+        total_tests_count  => 25,
+        total_cases_count  => 0,
+        failed_tests_count => 5,
+        failed_cases_count => 0,
+    },
+    q{update_result - change verified}
+);
+
 
 # vim: fdm=marker

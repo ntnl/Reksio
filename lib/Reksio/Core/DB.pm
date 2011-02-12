@@ -69,6 +69,17 @@ sub do_insert { # {{{
     return $_dbh->last_insert_id(undef, undef, undef, undef);
 } # }}}
 
+sub do_update { # {{{
+    my ($table, $stuff, $where) = @_;
+
+    my $_dbh = get_dbh();
+
+    my($stmt, @bind) = $abstract->update($table, $stuff, $where);
+    $_dbh->do($stmt, {}, @bind);
+
+    return;
+} # }}}
+
 sub do_select { # {{{
     my ($table, $columns, $where, $order) = @_;
 

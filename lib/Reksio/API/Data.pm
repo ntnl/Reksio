@@ -43,6 +43,7 @@ our @EXPORT_OK = qw(
 
     get_result
     get_results
+    update_result
     delete_result
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
@@ -324,7 +325,7 @@ sub get_result { # {{{
 
     my $sth = Reksio::Core::DB::do_select(
         'reksio_Result',
-        [qw( revision_id build_id status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
+        [qw( id revision_id build_id status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
         \%P,
     );
     my $rev = $sth->fetchrow_hashref();
@@ -335,6 +336,36 @@ sub get_result { # {{{
 # TODO
 #sub get_results { # {{{
 #} # }}}
+
+sub update_result { # {{{
+    my %P = validate(
+        @_,
+        {
+            id => { type=>SCALAR },
+
+            status => { type=>SCALAR, optional=>1 },
+
+            date_start         => { type=>SCALAR, optional=>1 },
+            date_finish        => { type=>SCALAR, optional=>1 },
+            total_tests_count  => { type=>SCALAR, optional=>1 },
+            total_cases_count  => { type=>SCALAR, optional=>1 },
+            failed_tests_count => { type=>SCALAR, optional=>1 },
+            failed_cases_count => { type=>SCALAR, optional=>1 },
+        }
+    );
+    
+    my $result_id = delete $P{'id'};
+
+    Reksio::Core::DB::do_update(
+        'reksio_Result',
+        \%P,
+        {
+            id => $result_id
+        }
+    );
+
+    return;
+} # }}}
 
 # TODO
 #sub delete_result { # {{{
