@@ -314,9 +314,23 @@ sub schedule_build { # {{{
     );
 } # }}}
 
-# TODO
-#sub get_result { # {{{
-#} # }}}
+sub get_result { # {{{
+    my %P = validate(
+        @_,
+        {
+            id => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Result',
+        [qw( revision_id build_id status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
+        \%P,
+    );
+    my $rev = $sth->fetchrow_hashref();
+
+    return $rev;
+} # }}}
 
 # TODO
 #sub get_results { # {{{

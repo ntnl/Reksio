@@ -298,4 +298,23 @@ my $res1_id = schedule_build(
 );
 is ($res1_id, 1, 'schedule_build');
 
+is_deeply(
+    get_result(id=>$res1_id),
+    {
+        revision_id => $rev1_id,
+        build_id    => $b1_id,
+
+        status => 'N',
+
+        date_queued        => 0,
+        date_start         => 0,
+        date_finish        => 0,
+        total_tests_count  => 0,
+        total_cases_count  => 0,
+        failed_tests_count => 0,
+        failed_cases_count => 0,
+    },
+    q{get_result}
+);
+
 # vim: fdm=marker
