@@ -64,10 +64,10 @@
 [X]         Dump results
 [X]         Dump log
 [X]     Automated test
-[>]     Separated stages for: configure, build, test
-[ ] Report function
-[ ]     Prepare
-[ ]         Common initialization (config and help)
+[X]     Separated stages for: configure, build, test
+[>] Report function
+[>]     Prepare
+[>]         Common initialization (config and help)
 [ ]         Find 'parent' revision
 [ ]         Load revision A and B metadata
 [ ]     Main functionality
