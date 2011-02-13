@@ -347,14 +347,16 @@ sub update_result { # {{{
 
             date_start         => { type=>SCALAR, optional=>1 },
             date_finish        => { type=>SCALAR, optional=>1 },
-            total_tests_count  => { type=>SCALAR, optional=>1 },
-            total_cases_count  => { type=>SCALAR, optional=>1 },
-            failed_tests_count => { type=>SCALAR, optional=>1 },
-            failed_cases_count => { type=>SCALAR, optional=>1 },
+            total_tests_count  => { type=>SCALAR | UNDEF, optional=>1 },
+            total_cases_count  => { type=>SCALAR | UNDEF, optional=>1 },
+            failed_tests_count => { type=>SCALAR | UNDEF, optional=>1 },
+            failed_cases_count => { type=>SCALAR | UNDEF, optional=>1 },
         }
     );
     
     my $result_id = delete $P{'id'};
+
+    # FIXME: check if there are any keys, after deleting the ID.
 
     Reksio::Core::DB::do_update(
         'reksio_Result',

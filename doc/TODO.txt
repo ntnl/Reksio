@@ -51,19 +51,19 @@
 [X]     Get list of commits
 [X]     Insert new commits into DB
 [X]     Automated test
-[ ] Build function
-[ ]     Prepare for the build
-[ ]         Common initialization (config and help)
-[ ]         Read-in the configuration
-[ ]     Do the build
-[ ]         Checkout stuff to build
-[ ]         Run build command
-[ ]         Parse build results
-[ ]     Finish the build
-[ ]         Remove build directory
-[ ]         Dump results
-[ ]         Dump log
-[ ]     Automated test
+[X] Build function
+[X]     Prepare for the build
+[X]         Common initialization (config and help)
+[X]         Read-in the configuration
+[X]     Do the build
+[X]         Checkout stuff to build
+[X]         Run build command
+[X]         Parse build results
+[X]     Finish the build
+[X]         Remove build directory
+[X]         Dump results
+[X]         Dump log
+[X]     Automated test
 [ ] Report function
 [ ]     Prepare
 [ ]         Common initialization (config and help)
@@ -108,6 +108,8 @@
 
  * Command line utility to list repositories
  * Command line utility to display server status (overall + detailed)
+ * Define build stages: configuration, build, test - each having separate command and status
+    * Built-in support for TAP::Harness (so Reksio can list tests)
  * Dispatch commands in paralel (more, then one command at once)
  * 'subversion' vcs support
  * Web UI
@@ -123,4 +125,5 @@
  * If tests fail, compress working directory and store for later inspection.
  * Ability to 'pause' and 'resume' (starting of) builds
  * Support for branches in GIT
+ * Bulk storage - either DB-based or FS-based (configurable)
 

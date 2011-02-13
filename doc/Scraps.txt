@@ -24,13 +24,12 @@
     Filesystem:
 
         builds/   <-- directory where test-result-data is stored (can be named differently).
-        builds/repository_id/
-        builds/repository_id/revision_id/
-        builds/repository_id/revision_id/info.yaml
-        builds/repository_id/revision_id/builds/    <-- directory where test results lay
-        builds/repository_id/revision_id/builds/ddd/    <-- directory where results of test with result_id % 1000
-        builds/repository_id/revision_id/builds/ddd/result_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
-        builds/repository_id/revision_id/builds/ddd/result_id-results.yaml    <-- actual test results, formatted in YAML
+        builds/$repository_id/
+        builds/$repository_id/$revision_id/
+        builds/$repository_id/$revision_id/info.yaml
+        builds/$repository_id/$revision_id/build_$build_id/    <-- directory where build/test results lay
+        builds/$repository_id/$revision_id/build_$build_id/$result_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
+        builds/$repository_id/$revision_id/build_$build_id/$result_id-details.yaml    <-- actual test results, formatted in YAML
 
  Config:
 

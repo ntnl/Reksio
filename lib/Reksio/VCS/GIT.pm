@@ -95,10 +95,10 @@ sub _bare_copy_location { # {{{
     return $self->{'VCS'}->{'Bare_Repo'};
 } # }}}
 
-END {
-    # Clean any bare copy, that We have created...
-    # TODO
-}
+#END {
+#    # Clean any bare copy, that We have created...
+#    # TODO
+#}
 
 # vim: fdm=marker
 1;

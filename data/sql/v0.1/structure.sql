@@ -27,7 +27,7 @@ CREATE TABLE reksio_Build (
     result_type     VARCHAR(32)
         -- NONE - ignore the result (build always positive).
         -- EXITCODE - buld was successful if command's exit code was zero.
-        -- POD - parse output as POD, and judge results by that.
+        -- TAP - parse output as TAP, and judge results by that.
 );
 CREATE UNIQUE INDEX reksio_Build_name ON reksio_Build (name, repository_id);
 
@@ -55,18 +55,20 @@ CREATE TABLE reksio_Result (
     revision_id     INTEGER,
     build_id        INTEGER,
 
-    status  CHAR(1),
+    status CHAR(1),
         -- N - New (scheduled for execution)
         -- R - Running
-        -- F - Finished
-        -- E - Finished with error
+        -- P - Finished (Positive)
+        -- N - Finished (Negative)
+        -- E - Internal error happened during the build
 
-    date_queued         DATETIME,
-    date_start          DATETIME,
-    date_finish         DATETIME,
-    total_tests_count   INTEGER,
-    total_cases_count   INTEGER,
-    failed_tests_count  INTEGER,
-    failed_cases_count  INTEGER
+    date_queued DATETIME,
+    date_start  DATETIME,
+    date_finish DATETIME,
+
+    total_tests_count  INTEGER,
+    total_cases_count  INTEGER,
+    failed_tests_count INTEGER,
+    failed_cases_count INTEGER
 );
 
