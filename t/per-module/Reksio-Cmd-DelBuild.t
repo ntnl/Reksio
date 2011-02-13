@@ -43,8 +43,8 @@ my $b1_id = add_build(
     name          => 'Integrate',
     build_command => 'prove',
 
-    frequency   => 'EACH',
-    result_type => 'NONE'
+    frequency        => 'EACH',
+    test_result_type => 'NONE'
 );
 my $b2_id = add_build(
     repository_id => $r1_id,
@@ -52,8 +52,8 @@ my $b2_id = add_build(
     name          => 'Cover',
     build_command => 'prove_cover',
 
-    frequency   => 'RECENT',
-    result_type => 'NONE'
+    frequency        => 'RECENT',
+    test_result_type => 'NONE'
 );
 
 my $exit_code;

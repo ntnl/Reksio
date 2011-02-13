@@ -64,6 +64,7 @@
 [X]         Dump results
 [X]         Dump log
 [X]     Automated test
+[>]     Separated stages for: configure, build, test
 [ ] Report function
 [ ]     Prepare
 [ ]         Common initialization (config and help)
@@ -71,8 +72,6 @@
 [ ]         Load revision A and B metadata
 [ ]     Main functionality
 [ ]         Compare revision results
-[ ]         Decide if sending is needed
-[ ]     Send report, if needed
 [ ]         Prepare summaries
 [ ]         Send summaries
 [ ]     Automated test
@@ -110,7 +109,7 @@
  * Command line utility to display server status (overall + detailed)
  * Define build stages: configuration, build, test - each having separate command and status
     * Built-in support for TAP::Harness (so Reksio can list tests)
- * Dispatch commands in paralel (more, then one command at once)
+ * Dispatch commands in paralel (run more then one command at once)
  * 'subversion' vcs support
  * Web UI
  * 'archive' vcs support (supporting both file:// and http://)
@@ -126,4 +125,5 @@
  * Ability to 'pause' and 'resume' (starting of) builds
  * Support for branches in GIT
  * Bulk storage - either DB-based or FS-based (configurable)
+ * Charts (in Web UI)
 

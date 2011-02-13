@@ -90,66 +90,73 @@ sub main { # {{{
     $vcs_handler->checkout($sandbox_location, $revision->{'commit_id'});
 
     # Run the build
-    my $pipe;
-    if (not open $pipe, q{-|}, q{cd } . $sandbox_location .q{ && } . $build->{'build_command'} . q{ 2>&1}) {
-        # FIXME: cover this use-case in automated tests!
-        print STDERR q{Error: Build command failed.};
-
-        # FIXME: emit some debug information.
-
-        update_result(
-            id => $result->{'id'},
-
-            status => q{E}, # E = Internal Error
-        );
-
-        return 2;
-    }
-    my $output = read_file($pipe);
-    my $close_status = close $pipe;
-
-#    warn $output;
-
-    my %result_update;
+    my $output;
     my %detailed_result;
-    if ($build->{'result_type'} eq q{EXITCODE}) {
-        # Check exit code.
-        # FIXME: cover this use-case in automated tests!
-        if ($close_status and not $!) {
-            # Not clean exit.
-            $result_update{'status'} = q{N}; # Finish: Negative
+
+    # Tests configured?
+    if ($build->{'test_command'}) {
+        my $pipe;
+        if (not open $pipe, q{-|}, q{cd } . $sandbox_location .q{ && } . $build->{'test_command'} . q{ 2>&1}) {
+            # FIXME: cover this use-case in automated tests!
+            print STDERR q{Error: Test command failed.};
+
+            # FIXME: emit some debug information.
+
+            update_result(
+                id => $result->{'id'},
+
+                build_status => q{E}, # E = Internal Error
+                build_stage  => q{D},
+            );
+
+            return 2;
+        }
+
+        $output .= read_file($pipe);
+        my $close_status = close $pipe;
+
+#        warn $output;
+
+        my %result_update;
+        if ($build->{'test_result_type'} eq q{EXITCODE}) {
+            # Check exit code.
+            # FIXME: cover this use-case in automated tests!
+            if ($close_status and not $!) {
+                # Not clean exit.
+                $result_update{'build_status'} = q{N}; # Finish: Negative
+            }
+            else {
+                # Clean exit.
+                $result_update{'build_status'} = q{P}; # Finish: Positive
+            }
+        }
+        elsif ($build->{'test_result_type'} eq q{TAP}) {
+            # Analyze TAP output.
+            my $tests = _analyze_tap_report($output);
+
+            # This goes into DB...
+            $result_update{'build_status'} = $tests->{'status'};
+        
+            $result_update{'total_tests_count'}  = $tests->{'total_tests_count'};
+            $result_update{'total_cases_count'}  = $tests->{'total_cases_count'};
+            $result_update{'failed_tests_count'} = $tests->{'failed_tests_count'};
+            $result_update{'failed_cases_count'} = $tests->{'failed_cases_count'};
+
+            # This goes into the file...
+            $detailed_result{'tests'} = $tests->{'tests'};
         }
         else {
-            # Clean exit.
-            $result_update{'status'} = q{P}; # Finish: Positive
+            # Build always successful.
+            # FIXME: cover this use-case in automated tests!
+            $result_update{'build_status'} = q{P}; # Finish: Positive
         }
+
+        update_result(
+            %result_update,
+
+            id => $result->{'id'},
+        );
     }
-    elsif ($build->{'result_type'} eq q{TAP}) {
-        # Analyze TAP output.
-        my $tests = _analyze_tap_report($output);
-
-        # This goes into DB...
-        $result_update{'status'} = $tests->{'status'};
-        
-        $result_update{'total_tests_count'}  = $tests->{'total_tests_count'};
-        $result_update{'total_cases_count'}  = $tests->{'total_cases_count'};
-        $result_update{'failed_tests_count'} = $tests->{'failed_tests_count'};
-        $result_update{'failed_cases_count'} = $tests->{'failed_cases_count'};
-
-        # This goes into the file...
-        $detailed_result{'tests'} = $tests->{'tests'};
-    }
-    else {
-        # Build always successful.
-        # FIXME: cover this use-case in automated tests!
-        $result_update{'status'} = q{P}; # Finish: Positive
-    }
-
-    update_result(
-        %result_update,
-
-        id => $result->{'id'},
-    );
 
     # Write raw output to file.
     my $build_results_dir = get_config_option('build_results');

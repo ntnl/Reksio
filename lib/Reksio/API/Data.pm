@@ -127,10 +127,12 @@ sub add_build { # {{{
             repository_id => { type=>SCALAR },
             name          => { type=>SCALAR },
 
-            build_command => { type=>SCALAR },
+            config_command => { type=>SCALAR, optional=>1 },
+            build_command  => { type=>SCALAR, optional=>1 },
+            test_command   => { type=>SCALAR, optional=>1 },
 
-            frequency   => { type=>SCALAR },
-            result_type => { type=>SCALAR },
+            frequency        => { type=>SCALAR },
+            test_result_type => { type=>SCALAR },
         },
     );
 
@@ -140,10 +142,12 @@ sub add_build { # {{{
             name          => $P{'name'},
             repository_id => $P{'repository_id'},
 
-            build_command => $P{'build_command'},
+            config_command => $P{'config_command'},
+            build_command  => $P{'build_command'},
+            test_command   => $P{'test_command'},
 
-            frequency   => $P{'frequency'},
-            result_type => $P{'result_type'},
+            frequency        => $P{'frequency'},
+            test_result_type => $P{'test_result_type'},
         }
     );
 } # }}}
@@ -163,7 +167,7 @@ sub get_build { # {{{
     
     my $sth = Reksio::Core::DB::do_select(
         'reksio_Build',
-        [qw( id name repository_id build_command frequency result_type )],
+        [qw( id name repository_id config_command build_command test_command frequency test_result_type )],
         \%P,
     );
     my $repo = $sth->fetchrow_hashref();
@@ -302,11 +306,14 @@ sub schedule_build { # {{{
             revision_id   => $P{'revision_id'},
             build_id      => $P{'build_id'},
 
-            status => 'N',
+            build_status  => 'N',
+            build_stage   => 'N',
+            report_status => 'N',
 
-            date_queued        => 0, # FIXME!
-            date_start         => 0,
-            date_finish        => 0,
+            date_queued => 0, # FIXME!
+            date_start  => 0,
+            date_finish => 0,
+
             total_tests_count  => 0,
             total_cases_count  => 0,
             failed_tests_count => 0,
@@ -325,7 +332,7 @@ sub get_result { # {{{
 
     my $sth = Reksio::Core::DB::do_select(
         'reksio_Result',
-        [qw( id revision_id build_id status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
+        [qw( id revision_id build_id build_status build_stage report_status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
         \%P,
     );
     my $rev = $sth->fetchrow_hashref();
@@ -343,10 +350,13 @@ sub update_result { # {{{
         {
             id => { type=>SCALAR },
 
-            status => { type=>SCALAR, optional=>1 },
+            build_status  => { type=>SCALAR, optional=>1 },
+            build_stage   => { type=>SCALAR, optional=>1 },
+            report_status => { type=>SCALAR, optional=>1 },
 
-            date_start         => { type=>SCALAR, optional=>1 },
-            date_finish        => { type=>SCALAR, optional=>1 },
+            date_start  => { type=>SCALAR, optional=>1 },
+            date_finish => { type=>SCALAR, optional=>1 },
+
             total_tests_count  => { type=>SCALAR | UNDEF, optional=>1 },
             total_cases_count  => { type=>SCALAR | UNDEF, optional=>1 },
             failed_tests_count => { type=>SCALAR | UNDEF, optional=>1 },

@@ -39,11 +39,12 @@ my $rep1_id = add_repository(name => 'First', vcs=>'GIT', uri=>$repo_path);
 my $b1_id = add_build(
     repository_id => $rep1_id,
 
-    name          => 'Prove',
-    build_command => 'prove t/',
+    name => 'Prove',
 
-    frequency   => 'EACH',
-    result_type => 'TAP'
+    test_command => 'prove t/',
+
+    frequency        => 'EACH',
+    test_result_type => 'TAP'
 );
 my $rev1_id = add_revision(
     repository_id => $rep1_id,
@@ -99,7 +100,9 @@ is_deeply(
         revision_id => $rev1_id,
         build_id    => $b1_id,
 
-        status => 'N',
+        build_status  => 'N',
+        build_stage   => 'N',
+        report_status => 'N',
 
         total_tests_count  => 3,
         total_cases_count  => 8,

@@ -53,31 +53,31 @@ stdout_like {
 
 
 stdout_like {
-    $exit_code = Reksio::Cmd::AddBuild::main('--repo=First', '--name=Tst1', '--build_command=prove', '--frequency=EACH', '--result_type=POD');
+    $exit_code = Reksio::Cmd::AddBuild::main('--repo=First', '--name=Tst1', '--test_command=prove', '--frequency=EACH', '--test_result_type=POD');
 } qr{Build added}s, q{add - clean exit (1/3)};
 is($exit_code, 0, q{add - exit code (1/3)});
 
 stdout_like {
-    $exit_code = Reksio::Cmd::AddBuild::main('--repo=First', '--name=Tst2', '--build_command=prove_cover', '--frequency=DAILY', '--result_type=EXITCODE');
+    $exit_code = Reksio::Cmd::AddBuild::main('--repo=First', '--name=Tst2', '--test_command=prove_cover', '--frequency=DAILY', '--test_result_type=EXITCODE');
 } qr{Build added}s, q{add - clean exit (2/3)};
 is($exit_code, 0, q{add - exit code (2/3)});
 
 stdout_like {
-    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Secnd', '--name=Tst1', '--build_command=prove', '--frequency=EACH', '--result_type=POD');
+    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Secnd', '--name=Tst1', '--test_command=prove', '--frequency=EACH', '--test_result_type=POD');
 } qr{Build added}s, q{add - clean exit (3/3)};
 is($exit_code, 0, q{add - exit code (3/3)});
 
 
 
 stderr_like {
-    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Foo', '--name=Tst1', '--build_command=prove', '--frequency=EACH', '--result_type=POD'),
+    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Foo', '--name=Tst1', '--test_command=prove', '--frequency=EACH', '--test_result_type=POD'),
 } qr{does not exist}s, q{Can not duplicate name - clean exit};
 is($exit_code, 1, q{Can not duplicate name - exit code});
 
 
 
 stderr_like {
-    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Secnd', '--name=Tst1', '--build_command=prove', '--frequency=EACH', '--result_type=POD'),
+    $exit_code = Reksio::Cmd::AddBuild::main('--repo=Secnd', '--name=Tst1', '--test_command=prove', '--frequency=EACH', '--test_result_type=POD'),
 } qr{already exist}s, q{Can not duplicate name - clean exit};
 is($exit_code, 1, q{Can not duplicate name - exit code});
 

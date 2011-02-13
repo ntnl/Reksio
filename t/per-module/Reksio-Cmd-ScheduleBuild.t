@@ -41,20 +41,22 @@ my $rep2_id = add_repository(name => 'Secnd', vcs=>'GIT', uri=>'git://lol/rotfl'
 my $b1_id = add_build(
     repository_id => $rep1_id,
 
-    name          => q{Prove},
-    build_command => q{./t/run_tests.sh},
+    name => q{Prove},
 
-    frequency   => 'DAILY',
-    result_type => 'POD',    
+    test_command => q{./t/run_tests.sh},
+
+    frequency        => 'DAILY',
+    test_result_type => 'POD',    
 );
 my $b2_id = add_build(
     repository_id => $rep1_id,
 
-    name          => q{Coverage},
-    build_command => q{./t/run_tests.sh},
+    name => q{Coverage},
 
-    frequency   => q{RECENT},
-    result_type => q{EXITCODE},
+    test_command => q{./t/run_tests.sh},
+
+    frequency        => q{RECENT},
+    test_result_type => q{EXITCODE},
 );
 
 my $rev1_id = add_revision(

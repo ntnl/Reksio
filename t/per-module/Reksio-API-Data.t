@@ -116,33 +116,42 @@ is_deeply(
 my $b1_id = add_build(
     repository_id => $r1_id,
 
-    name          => 'Integrate',
-    build_command => 'prove',
+    name => 'Integrate',
 
-    frequency   => 'EACH',
-    result_type => 'NONE'
+    config_command => q{./Build.PL},
+    build_command  => q{./Build},
+    test_command   => q{prove},
+
+    frequency        => 'EACH',
+    test_result_type => 'NONE'
 );
 is ($b1_id, 1, q{add_build (1/3)});
 
 my $b2_id = add_build(
     repository_id => $r1_id,
 
-    name          => q{Coverage test},
-    build_command => q{prove_cover},
+    name => q{Coverage test},
 
-    frequency   => 'RECENT',
-    result_type => 'EXITCODE'
+    config_command => q{./Build.PL},
+    build_command  => q{./Build},
+    test_command   => q{prove_cover},
+
+    frequency        => 'RECENT',
+    test_result_type => 'EXITCODE'
 );
 is ($b2_id, 2, q{add_build (2/3)});
 
 my $b3_id = add_build(
     repository_id => $r2_id,
 
-    name          => q{Run tests},
-    build_command => q{./t/run_tests.sh},
+    name => q{Run tests},
+    
+    config_command => q{./dev/setup.sh},
+    build_command  => q{},
+    test_command   => q{./t/run_tests.sh},
 
-    frequency   => 'DAILY',
-    result_type => 'POD'
+    frequency        => 'DAILY',
+    test_result_type => 'POD'
 );
 is ($b3_id, 3, q{add_build (3/3)});
 
@@ -157,11 +166,14 @@ is_deeply(
         id            => $b2_id,
         repository_id => $r1_id,
 
-        name          => q{Coverage test},
-        build_command => q{prove_cover},
+        name => q{Coverage test},
 
-        frequency   => 'RECENT',
-        result_type => 'EXITCODE',
+        config_command => q{./Build.PL},
+        build_command  => q{./Build},
+        test_command   => q{prove_cover},
+
+        frequency        => 'RECENT',
+        test_result_type => 'EXITCODE',
     },
     q{get_build - by ID - existing build}
 );
@@ -177,11 +189,14 @@ is_deeply(
         id            => $b3_id,
         repository_id => $r2_id,
 
-        name          => q{Run tests},
-        build_command => q{./t/run_tests.sh},
+        name => q{Run tests},
 
-        frequency   => 'DAILY',
-        result_type => 'POD',
+        config_command => q{./dev/setup.sh},
+        build_command  => q{},
+        test_command   => q{./t/run_tests.sh},
+
+        frequency        => 'DAILY',
+        test_result_type => 'POD',
     },
     q{get_build - by name - existing build}
 );
@@ -309,11 +324,14 @@ is_deeply(
         revision_id => $rev1_id,
         build_id    => $b1_id,
 
-        status => 'N',
+        build_status  => 'N',
+        build_stage   => 'N',
+        report_status => 'N',
 
-        date_queued        => 0,
-        date_start         => 0,
-        date_finish        => 0,
+        date_queued => 0,
+        date_start  => 0,
+        date_finish => 0,
+
         total_tests_count  => 0,
         total_cases_count  => 0,
         failed_tests_count => 0,
@@ -325,7 +343,8 @@ is_deeply(
 update_result(
     id => $res1_id,
 
-    status => q{N},
+    build_status => q{P},
+    build_stage  => q{D},
 
     total_tests_count  => 25,
     failed_tests_count => 5,
@@ -338,11 +357,14 @@ is_deeply(
         revision_id => $rev1_id,
         build_id    => $b1_id,
 
-        status => 'N',
+        build_status  => 'P',
+        build_stage   => 'D',
+        report_status => 'N',
 
-        date_queued        => 0,
-        date_start         => 0,
-        date_finish        => 0,
+        date_queued => 0,
+        date_start  => 0,
+        date_finish => 0,
+
         total_tests_count  => 25,
         total_cases_count  => 0,
         failed_tests_count => 5,

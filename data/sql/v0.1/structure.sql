@@ -16,15 +16,19 @@ CREATE TABLE reksio_Build (
     id              INTEGER PRIMARY KEY,
     repository_id   INTEGER,
 
-    name            VARCHAR(128),
+    name VARCHAR(128),
+
+    config_command  VARCHAR(1024),
     build_command   VARCHAR(1024),
+    test_command    VARCHAR(1024),
+
     frequency       VARCHAR(32),
         -- EACH - run this build for each revision/commit
         -- RECENT - run always on most recent revision/commit (possibly skipping commits)
         -- HOURLY - run not often, then once per hour (on recent commit, unless already build)
         -- DAILY - run once per day (on most recent commit, unless already build)
 
-    result_type     VARCHAR(32)
+    test_result_type VARCHAR(32)
         -- NONE - ignore the result (build always positive).
         -- EXITCODE - buld was successful if command's exit code was zero.
         -- TAP - parse output as TAP, and judge results by that.
@@ -37,7 +41,7 @@ CREATE TABLE reksio_Revision (
 
     commit_id           VARCHAR(128),
     parent_commit_id    VARCHAR(128),
-    
+
     timestamp INT,
     commiter  VARCHAR(250),
 
@@ -55,12 +59,27 @@ CREATE TABLE reksio_Result (
     revision_id     INTEGER,
     build_id        INTEGER,
 
-    status CHAR(1),
-        -- N - New (scheduled for execution)
+    build_status CHAR(1) DEFAULT 'N',
+        -- N - New (scheduled for testing)
         -- R - Running
         -- P - Finished (Positive)
         -- N - Finished (Negative)
         -- E - Internal error happened during the build
+
+    build_stage CHAR(1) DEFAULT 'N',
+        -- N - New (build has not started)
+        -- O - Checkout
+        -- C - Configuration
+        -- B - Build
+        -- T - Tests
+        -- D - all steps complete
+
+    report_status CHAR(1) DEFAULT 'N',
+        -- N - New - this is a new result, there is nothing to report just yet.
+        -- W - Waiting - previous commit was not tested, thus report can not be generated yet.
+        -- S - Scheduled - report can be generated.
+        -- R - Running
+        -- D - Done - report for this result was generated.
 
     date_queued DATETIME,
     date_start  DATETIME,

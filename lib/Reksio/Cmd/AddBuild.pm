@@ -38,13 +38,21 @@ sub main { # {{{
             required => 1,
         },
         {
-            param => q{build_command},
+            param => q{config_command},
             desc  => q{Command executed to do the build},
             type  => q{s},
 
-            required => 1,
-
             margin => 1,
+        },
+        {
+            param => q{build_command},
+            desc  => q{Command executed to do the build},
+            type  => q{s},
+        },
+        {
+            param => q{test_command},
+            desc  => q{Command executed to do the build},
+            type  => q{s},
         },
         {
             param => q{frequency},
@@ -52,15 +60,19 @@ sub main { # {{{
             type  => q{s},
 
             required => 1,
+
+            margin => 1,
         },
         {
-            param => q{result_type},
+            param => q{test_result_type},
             desc  => q{Expected output format (NONE, EXITCODE, POD).},
             type  => q{s},
 
             required => 1,
         },
     );
+
+    # TODO: check if at least one *_command was given.
 
     my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
@@ -87,10 +99,14 @@ sub main { # {{{
     my $id = add_build(
         repository_id => $existing_repo->{'id'},
 
-        name          => $options->{'name'},
-        frequency     => $options->{'frequency'},
-        build_command => $options->{'build_command'},
-        result_type   => $options->{'result_type'},
+        name      => $options->{'name'},
+        frequency => $options->{'frequency'},
+
+        config_command => $options->{'config_command'},
+        build_command  => $options->{'build_command'},
+        test_command   => $options->{'test_command'},
+
+        test_result_type => $options->{'test_result_type'},
     );
 
     print "Build added (ID: $id)\n";
