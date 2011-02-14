@@ -63,13 +63,11 @@ my $repo_path;
 # Prepare the source test repository.
 # (FIXME) the way it's done is lame. But, hey! Let's get it running first!
 sub fake_repository { # {{{
-    my ( $bin ) = @_;
+    my ( $t_data ) = @_;
 
     $repo_path = q{/tmp/git_test_repo_} . $PID . q{/};
     mkdir $repo_path;
-    chdir $repo_path;
-    system q{tar}, q{xzf}, $bin .q{/../../t_data/test_repo.tgz};
-    chdir $bin;
+    system q{cd }. $repo_path .q{ && tar xzf } . $t_data . q{/test_repo.tgz};
 
     return $repo_path . q{test_repo/};
 } # }}}

@@ -33,7 +33,7 @@ plan tests =>
 ;
 
 my $basedir = fake_installation($Bin .q{/../../t_data/});
-my $repo_path = fake_repository($Bin);
+my $repo_path = fake_repository($Bin .q{/../../t_data/});
 
 my $rep1_id = add_repository(name => 'First', vcs=>'GIT', uri=>$repo_path);
 my $b1_id = add_build(

@@ -27,7 +27,7 @@ plan tests =>
 
 use Reksio::VCSFactory;
 
-my $repo_path = fake_repository($Bin);
+my $repo_path = fake_repository($Bin .q{/../../t_data/});
 
 my $vcs_handler = Reksio::VCSFactory::make('GIT', $repo_path);
 
