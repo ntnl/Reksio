@@ -67,9 +67,9 @@
 [X]     Separated stages for: configure, build, test
 [>] Report function
 [>]     Prepare
-[>]         Common initialization (config and help)
-[ ]         Find 'parent' revision
-[ ]         Load revision A and B metadata
+[X]         Common initialization (config and help)
+[X]         Find 'parent' revision
+[>]         Load revision A and B metadata
 [ ]     Main functionality
 [ ]         Compare revision results
 [ ]         Prepare summaries

@@ -326,7 +326,7 @@ sub get_result { # {{{
     my %P = validate(
         @_,
         {
-            id => { type=>SCALAR, optional=>1 },
+            id => { type=>SCALAR },
         },
     );
 
@@ -335,6 +335,29 @@ sub get_result { # {{{
         [qw( id revision_id build_id build_status build_stage report_status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
         \%P,
     );
+    my $rev = $sth->fetchrow_hashref();
+
+    return $rev;
+} # }}}
+
+# FIXME: cover this function in automated tests dedicated for this module.
+sub get_last_result { # {{{
+    my %P = validate(
+        @_,
+        {
+            build_id    => { type=>SCALAR },
+            revision_id => { type=>SCALAR },
+        },
+    );
+
+    my $sth = Reksio::Core::DB::prepare_and_execute(
+        q{SELECT * FROM reksio_Result WHERE revision_id = ? AND build_id = ? ORDER BY id DESC DESC LIMIT 1},
+        [
+            $P{'revision_id'},
+            $P{'build_id'},
+        ],
+    );
+
     my $rev = $sth->fetchrow_hashref();
 
     return $rev;
