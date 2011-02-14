@@ -190,7 +190,7 @@ sub main { # {{{
 
 #    warn $output_basedir . $result->{'id'} .q{-log.txt} . q{ written :)};
 
-    print "Build ". $result->{'id'} ." complete.\n";
+    print "Build for result ". $result->{'id'} ." complete.\n";
 
     return 0;
 } # }}}

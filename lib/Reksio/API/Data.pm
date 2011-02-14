@@ -43,6 +43,7 @@ our @EXPORT_OK = qw(
 
     get_result
     get_results
+    get_last_result
     update_result
     delete_result
 );
@@ -351,7 +352,7 @@ sub get_last_result { # {{{
     );
 
     my $sth = Reksio::Core::DB::prepare_and_execute(
-        q{SELECT * FROM reksio_Result WHERE revision_id = ? AND build_id = ? ORDER BY id DESC DESC LIMIT 1},
+        q{SELECT * FROM reksio_Result WHERE revision_id = ? AND build_id = ? ORDER BY id DESC LIMIT 1},
         [
             $P{'revision_id'},
             $P{'build_id'},

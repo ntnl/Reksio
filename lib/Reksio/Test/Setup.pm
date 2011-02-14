@@ -24,6 +24,7 @@ use Test::More;
 
 our @EXPORT_OK = qw(
     fake_installation
+    fake_installation_with_data
     fake_repository
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
@@ -34,28 +35,30 @@ Set up (fake) environment for automated tests.
 
 =cut
 
+my $install_path;
+
 sub fake_installation { # {{{
     my ( $t_data_dir ) = @_;
 
-    my $basedir = sprintf q{/tmp/reksio-unit-test-%d/}, $PID;
+    my $install_path = sprintf q{/tmp/reksio-unit-test-%d/}, $PID;
 
-    mkdir $basedir;
+    mkdir $install_path;
 
-    mkdir $basedir . q{workspace/};
-    mkdir $basedir . q{builds/};
-    mkdir $basedir . q{db/};
+    mkdir $install_path . q{workspace/};
+    mkdir $install_path . q{builds/};
+    mkdir $install_path . q{db/};
 
     # FIXME: do not use shell commands.
-    system q{cp}, $t_data_dir . q{empty_db.sqlite}, $basedir . q{db/db.sqlite};
+    system q{cp}, $t_data_dir . q{empty_db.sqlite}, $install_path . q{db/db.sqlite};
 
-    Reksio::Core::Config::set_config_option('workspace',     $basedir . q{workspace/});
-    Reksio::Core::Config::set_config_option('build_results', $basedir . q{builds/});
+    Reksio::Core::Config::set_config_option('workspace',     $install_path . q{workspace/});
+    Reksio::Core::Config::set_config_option('build_results', $install_path . q{builds/});
 
-    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $basedir . q{db/db.sqlite});
+    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $install_path . q{db/db.sqlite});
     
     Reksio::Core::Config::set_config_option('configured', 1);
 
-    return $basedir;
+    return $install_path;
 } # }}}
 
 my $repo_path;
@@ -72,10 +75,33 @@ sub fake_repository { # {{{
     return $repo_path . q{test_repo/};
 } # }}}
 
+sub fake_installation_with_data { # {{{
+    my ( $t_data ) = @_;
+    
+    $install_path = q{/tmp/git_test_install_} . $PID . q{/};
+
+    mkdir $install_path;
+    system q{cd }. $install_path .q{ && tar xzf } . $t_data . q{/test_install.tgz};
+
+    Reksio::Core::Config::set_config_option('workspace',     $install_path . q{workspace/});
+    Reksio::Core::Config::set_config_option('build_results', $install_path . q{builds/});
+
+    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $install_path . q{db/db.sqlite});
+    
+    Reksio::Core::Config::set_config_option('configured', 1);
+
+    return $install_path;
+} # }}}
+
 END {
     if ($repo_path) {
         note("Cleaning test repo ($repo_path)");
         system q{rm}, q{-rf}, $repo_path;
+    }
+
+    if ($install_path) {
+        note("Cleaning test install ($install_path)");
+        system q{rm}, q{-rf}, $install_path;
     }
 }
 

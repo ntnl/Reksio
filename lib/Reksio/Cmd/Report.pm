@@ -16,13 +16,14 @@ use strict; use warnings; # {{{
 my $VERSION = '0.1.0';
 
 use Reksio::API::Config qw( get_config_option );
-use Reksio::API::Data qw( get_repository get_revision get_build get_result update_result );
+use Reksio::API::Data qw( get_repository get_revision get_build get_result update_result get_last_result );
 use Reksio::Cmd;
 
 use Carp::Assert::More qw( assert_defined );
 use English qw( -no_match_vars );
 use File::Slurp qw( read_file write_file );
 use Params::Validate qw( :all );
+use YAML::Any qw( LoadFile );
 # }}}
 
 sub main { # {{{
@@ -63,15 +64,19 @@ sub main { # {{{
     my $revision_B = get_revision(
         id => $result_B->{'revision_id'},
     );
-    
-    my $details_B = LoadFile();
+
+    my $build_results_dir = get_config_option('build_results');
+    assert_defined($build_results_dir);
+
+    my $basedir_B = $build_results_dir . $repo->{'id'} .q{/}. $revision_B->{'id'} .q{/build_} . $build->{'id'} .q{/};
+    my $details_B = LoadFile($basedir_B . $result_B->{'id'} .q{-details.yaml});
 
     my $report;
     my ( $revision_A, $result_A, $details_A );
     if ($revision_B->{'parent_commit_id'}) {
         $revision_A = get_revision(
-            repo      => $repo->{'name'},
-            commit_id => $revision_B->{'parent_commit_id'},
+            repository_id => $repo->{'id'},
+            commit_id     => $revision_B->{'parent_commit_id'},
         );
 
         $result_A = get_last_result(
@@ -79,13 +84,16 @@ sub main { # {{{
             revision_id => $revision_A->{'id'},
         );
 
-        $details_A = LoadFile();
+        my $basedir_A = $build_results_dir . $repo->{'id'} .q{/}. $revision_A->{'id'} .q{/build_} . $build->{'id'} .q{/};
+        $details_A = LoadFile($basedir_A . $result_A->{'id'} .q{-details.yaml});
 
         $report = _compare_revisions($repo, $build, $revision_A, $details_A, $revision_B, $details_B);
     }
     else {
         $report = _describe_revision($repo, $build, $revision_B, $details_B);
     }
+    
+    print "Report for result ". $result_B->{'id'} ." complete.\n";
 
     return 0;
 } # }}}
