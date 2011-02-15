@@ -57,8 +57,9 @@ sub vcs_revisions { # {{{
             parent    => $parent,
         };
     }
-
-    return \@revisions;
+    
+    # Make the oldest at index 0 and newest at the end of the array.
+    return [ reverse @revisions ];
 } # }}}
 
 sub vcs_checkout { # {{{

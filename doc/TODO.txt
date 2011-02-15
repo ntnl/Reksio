@@ -66,15 +66,19 @@
 [X]     Automated test
 [X]     Separated stages for: configure, build, test
 [>] Report function
-[>]     Prepare
+[X]     Prepare
 [X]         Common initialization (config and help)
 [X]         Find 'parent' revision
-[>]         Load revision A and B metadata
-[ ]     Main functionality
-[ ]         Compare revision results
-[ ]         Prepare summaries
-[ ]         Send summaries
-[ ]     Automated test
+[X]         Load revision A and B metadata
+[X]     Main functionality
+[X]         Compare revision results
+[X]         Prepare summaries
+[>]         Send summaries
+[>]             Find out what email address(es) to use
+[ ]                 Implement email configuration
+[ ]                 Get emails for user/repository
+[ ]             Compose and send message
+[>]     Automated test
 [ ] Dispatch functionality
 [ ]     Common initialization (config and help)
 [ ]     Implement 'Local' dispatcher

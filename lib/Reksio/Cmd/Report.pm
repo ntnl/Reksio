@@ -23,7 +23,7 @@ use Carp::Assert::More qw( assert_defined );
 use English qw( -no_match_vars );
 use File::Slurp qw( read_file write_file );
 use Params::Validate qw( :all );
-use YAML::Any qw( LoadFile );
+use YAML::Any qw( DumpFile LoadFile );
 # }}}
 
 sub main { # {{{
@@ -71,7 +71,7 @@ sub main { # {{{
     my $basedir_B = $build_results_dir . $repo->{'id'} .q{/}. $revision_B->{'id'} .q{/build_} . $build->{'id'} .q{/};
     my $details_B = LoadFile($basedir_B . $result_B->{'id'} .q{-details.yaml});
 
-    my $report;
+    my $report = qq{\n};
     my ( $revision_A, $result_A, $details_A );
     if ($revision_B->{'parent_commit_id'}) {
         $revision_A = get_revision(
@@ -87,12 +87,18 @@ sub main { # {{{
         my $basedir_A = $build_results_dir . $repo->{'id'} .q{/}. $revision_A->{'id'} .q{/build_} . $build->{'id'} .q{/};
         $details_A = LoadFile($basedir_A . $result_A->{'id'} .q{-details.yaml});
 
-        $report = _compare_revisions($repo, $build, $revision_A, $details_A, $revision_B, $details_B);
+        $report .= _compare_revisions($repo, $build, $revision_A, $details_A, $revision_B, $details_B);
     }
     else {
-        $report = _describe_revision($repo, $build, $revision_B, $details_B);
+        $report .= _describe_revision($repo, $build, $revision_B, $details_B);
     }
     
+#    warn $report;
+
+    write_file($basedir_B . $result_B->{'id'} .q{-report.txt}, $report);
+
+    # Send the report by email...
+
     print "Report for result ". $result_B->{'id'} ." complete.\n";
 
     return 0;
@@ -101,7 +107,7 @@ sub main { # {{{
 sub _separator { # {{{
     my ( $title ) = @_;
 
-    my $string = qq{\n ---= } . $title . q{=};
+    my $string = qq{\n ---= } . $title . q{ =};
     $string .= q{-} x ( 64 - length $title);
     $string .= qq{ - - -\n\n};
 
@@ -114,15 +120,18 @@ sub _format_test_file_line { # {{{
         {
             test    => { type=>SCALAR },
             details => { type=>HASHREF },
+            status  => { type=>SCALAR },
         }
     );
 
+    # FIXME: if test name is bigger then 45 characters, make a "foo...bar" aut of it.
+
     my $string;
-    if ($P{'details'}->{'status'} eq 'Fixed') {
-        $string = sprintf q{  %45s %8s}, $P{'test'}, $P{'details'}->{'status'};
+    if ($P{'details'}->{'failed_count'}) {
+        $string = sprintf q{  %-45s %8s}, $P{'test'}, $P{'status'};
     }
     else {
-        $string = sprintf q{  %45s %8s (%d of %d)}, $P{'test'}, $P{'details'}->{'status'}, $P{'details'}->{'failed_count'}, $P{'details'}->{'cases_count'};
+        $string = sprintf q{  %-45s %8s (%d of %d)}, $P{'test'}, $P{'status'}, $P{'details'}->{'failed_count'}, $P{'details'}->{'cases_count'};
     }
 
     return $string . qq{\n};
@@ -133,7 +142,60 @@ sub _compare_revisions { # {{{
 
     my $report_text = _rep_describe_revision($revision_B);
 
-    $report_text .= _separator('Tests change report');
+    if (not scalar keys %{ $details_A->{'tests'} } and not scalar keys %{ $details_B->{'tests'} }) {
+        $report_text .= _separator('All tests passed');
+
+        $report_text .= "This commit passed all tests.";
+    }
+    else {
+        my %test_pool = (
+            'Fixed'  => {
+                label => "Tests fixed by this commit",
+                tests => {},
+            },
+            'Broken' => {
+                label => "Tests broken by this commit",
+                tests => {},
+            },
+            'Failing' => {
+                label => "Tests still broken",
+                tests => {},
+            },
+        );
+
+        foreach my $test (keys %{ $details_A->{'tests'} }) {
+            if ($details_B->{'tests'}->{$test}) {
+                # Broken in both revisions.
+                $test_pool{'Failing'}->{'tests'}->{$test} = $details_B->{'tests'}->{$test}->{'status'};
+            }
+            else {
+                # Broken in previous revision, but now it passed = fixed :)
+                $test_pool{'Fixed'}->{'tests'}->{$test} = 'Passed';
+            }
+        }
+        foreach my $test (keys %{ $details_B->{'tests'} }) {
+            if (not $details_A->{'tests'}->{$test}) {
+                $test_pool{'Broken'}->{'tests'}->{$test} = $details_B->{'tests'}->{$test}->{'status'};
+            }
+        }
+
+        foreach my $section (qw( Fixed Broken Failing )) {
+            if (not scalar keys %{ $test_pool{$section}->{'tests'} }) {
+                # This section is empty. Skip it.
+                next;
+            }
+
+            $report_text .= _separator($test_pool{$section}->{'label'});
+
+            foreach my $test (keys %{ $test_pool{$section}->{'tests'} }) {
+                $report_text .= _format_test_file_line(
+                    test    => $test,
+                    details => ( $details_B->{'tests'}->{$test} or $details_A->{'tests'}->{$test} ),
+                    status  => $test_pool{$section}->{'tests'}->{$test}
+                );
+            }
+        }
+    }
 
     return $report_text;
 } # }}}
@@ -143,13 +205,21 @@ sub _describe_revision { # {{{
 
     my $report_text = _rep_describe_revision($revision);
 
-    $report_text .= _separator('Tests report');
+    if (not scalar keys %{ $details->{'tests'} }) {
+        $report_text .= _separator('All tests passed');
 
-    foreach my $test (keys %{ $details->{'tests'} }) {
-        $report_text .= _format_test_file_line(
-            test    => $test,
-            details => $details->{'tests'}->{$test},
-        );
+        $report_text .= "This commit passed all tests.";
+    }
+    else {
+        $report_text .= _separator('Tests broken by this commit');
+
+        foreach my $test (keys %{ $details->{'tests'} }) {
+            $report_text .= _format_test_file_line(
+                test    => $test,
+                details => $details->{'tests'}->{$test},
+                status  => $details->{'tests'}->{$test}->{'status'},
+            );
+        }
     }
 
     return $report_text;
@@ -159,10 +229,13 @@ sub _rep_describe_revision { # {{{
     my ( $revision ) = @_;
 
     my $text = q{};
+    
+    my $message = $revision->{'message'};
+    chomp $message;
 
+    $text .= q{Report for commit: }. $revision->{'commit_id'}. qq{\n\n};
     $text .= q{Committed by } . $revision->{'commiter'} . q{ at } . ( localtime $revision->{'timestamp'} ) . qq{\n};
     $text .= qq{with message:\n} . $revision->{'message'} . qq{\n};
-    $text .= qq{\n};
 
     # TODO: have list of changed files here.
 

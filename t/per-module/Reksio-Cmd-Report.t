@@ -28,7 +28,7 @@ use Reksio::Cmd::Report;
 plan tests =>
     + 1 # check --help
     + 1 # check --version
-    + 10 # report
+    + 5 * 3 # report
     + 2 # non-existing result
 ;
 
@@ -49,30 +49,47 @@ stdout_like {
 
 
 
+my $report_file;
+
 stdout_like {
     $exit_code = Reksio::Cmd::Report::main('--result_id=' . 1);
 } qr{Report .+? complete}s, q{Report - first - clean exit};
 is($exit_code, 0, q{Report - first - exit code});
+
+$report_file = read_file($basedir . q{/builds/1/1/build_1/1-report.txt});
+like($report_file, qr{Committed}s, q{Report - was generated});
 
 stdout_like {
     $exit_code = Reksio::Cmd::Report::main('--result_id=' . 2);
 } qr{Report .+? complete}s, q{Report - passed - clean exit};
 is($exit_code, 0, q{Report - passed - exit code});
 
+$report_file = read_file($basedir . q{/builds/1/2/build_1/2-report.txt});
+like($report_file, qr{Committed}s, q{Report - was generated});
+
 stdout_like {
     $exit_code = Reksio::Cmd::Report::main('--result_id=' . 3);
 } qr{Report .+? complete}s, q{Report - failure - clean exit};
 is($exit_code, 0, q{Report - failure - exit code});
+
+$report_file = read_file($basedir . q{/builds/1/3/build_1/3-report.txt});
+like($report_file, qr{Committed}s, q{Report - was generated});
 
 stdout_like {
     $exit_code = Reksio::Cmd::Report::main('--result_id=' . 4);
 } qr{Report .+? complete}s, q{Report - still broken - clean exit};
 is($exit_code, 0, q{Report - still broken - exit code});
 
+$report_file = read_file($basedir . q{/builds/1/4/build_1/4-report.txt});
+like($report_file, qr{Committed}s, q{Report - was generated});
+
 stdout_like {
     $exit_code = Reksio::Cmd::Report::main('--result_id=' . 5);
 } qr{Report .+? complete}s, q{Report - fix - clean exit};
 is($exit_code, 0, q{Report - fix - exit code});
+
+$report_file = read_file($basedir . q{/builds/1/5/build_1/5-report.txt});
+like($report_file, qr{Committed}s, q{Report - was generated});
 
 
 
