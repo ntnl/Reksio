@@ -75,6 +75,7 @@
 [X]         Prepare summaries
 [>]         Send summaries
 [>]             Find out what email address(es) to use
+[>]                 Design the whole thing
 [ ]                 Implement email configuration
 [ ]                 Get emails for user/repository
 [ ]             Compose and send message
@@ -83,23 +84,39 @@
 [ ]     Common initialization (config and help)
 [ ]     Implement 'Local' dispatcher
 [ ]     Run Inspect script
+[ ]         Identify what needs to be updated
+[ ]         Execute the inspect command
 [ ]     Run Build script
+[ ]         Harvest non-built revisions and schedule builds
 [ ]         Execute the build command
-[ ]         Harvest test results and log
 [ ]     Run Report script
+[ ]         Harvest not-reported builds and schedule reports
+[ ]         Execute the report command
 [ ]     Automated test
-[ ] Release
-[ ]     Make a package (Module::Build)
-[ ]     Make a (spartan) website
-[ ]     Generate docs (POD)
-[ ]     Check README (possibly create)
-[ ]     Generate source code dump
-[ ]     Generate coverage report
-[ ]     Upload documentation
-[ ]     Upload dumped code
-[ ]     Upload coverage report
-[ ]     Upload archive
+[ ] Release beta version
+[ ]     Field testing - max 3-5 days
+[ ]         Deploy on private server, watch own repository.
+[ ]         Write missing documentation
+[ ]         Improve test coverage
+[ ]         Debug
+[ ]     Prepare stuff to upload
+[ ]         Make a package (Module::Build)
+[ ]         Make a (spartan) website
+[ ]         Generate docs (from POD)
+[ ]         Check README (possibly create)
+[ ]         Generate source code dump
+[ ]         Generate coverage report
+[ ]     Upload stuff
+[ ]         Upload documentation
+[ ]         Upload dumped code
+[ ]         Upload coverage report
+[ ]         Upload archive
+[ ]         Upload webpage
 [ ]     Push news to social sites
+[ ]         Twitter
+[ ]         Identi.ca
+[ ]         Facebook
+[ ]         Linked.In
 
  Known issues to be resolved
 
