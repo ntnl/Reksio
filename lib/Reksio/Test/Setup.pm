@@ -20,6 +20,7 @@ use Reksio::Core::Config;
 
 use English qw( -no_match_vars );
 use Test::More;
+use YAML::Any qw( DumpFile );
 # }}}
 
 our @EXPORT_OK = qw(
@@ -58,6 +59,26 @@ sub fake_installation { # {{{
     
     Reksio::Core::Config::set_config_option('configured', 1);
 
+    DumpFile(
+        $install_path . q{users.yaml},
+        {
+            "Bartłomiej Syguła" => {
+                vcs_ids => [
+                    "bs",
+                    "bs502",
+                    "bs5002",
+                    "natanael",
+                    "Bartłomiej Syguła",
+                ],
+                email => q{reksio-test@natanael.krakow.pl},
+            },
+            "FooBar" => {
+                email => undef,
+            },
+        }
+    );
+    Reksio::Core::Config::set_config_option('users_file',    $install_path . q{users.yaml});
+
     return $install_path;
 } # }}}
 
@@ -89,6 +110,26 @@ sub fake_installation_with_data { # {{{
     Reksio::Core::Config::set_config_option('db', q{sqlite:}. $install_path . q{db/db.sqlite});
     
     Reksio::Core::Config::set_config_option('configured', 1);
+
+    DumpFile(
+        $install_path . q{users.yaml},
+        {
+            "Bartłomiej Syguła" => {
+                vcs_ids => [
+                    "bs",
+                    "bs502",
+                    "bs5002",
+                    "natanael",
+                    "Bartłomiej Syguła",
+                ],
+                email => q{reksio-test@natanael.krakow.pl},
+            },
+            "FooBar" => {
+                email => undef,
+            },
+        }
+    );
+    Reksio::Core::Config::set_config_option('users_file',    $install_path . q{users.yaml});
 
     return $install_path;
 } # }}}

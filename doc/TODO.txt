@@ -74,11 +74,11 @@
 [X]         Compare revision results
 [X]         Prepare summaries
 [>]         Send summaries
-[>]             Find out what email address(es) to use
-[>]                 Design the whole thing
-[ ]                 Implement email configuration
-[ ]                 Get emails for user/repository
-[ ]             Compose and send message
+[X]             Find out what email address(es) to use
+[X]                 Design the whole thing
+[X]                 Implement email configuration
+[X]                 Get emails for user/repository
+[X]             Compose and send message
 [>]     Automated test
 [ ] Dispatch functionality
 [ ]     Common initialization (config and help)
@@ -126,25 +126,27 @@
 
  Future ideas
 
- * Command line utility to list repositories
- * Command line utility to display server status (overall + detailed)
- * Define build stages: configuration, build, test - each having separate command and status
-    * Built-in support for TAP::Harness (so Reksio can list tests)
- * Dispatch commands in paralel (run more then one command at once)
- * 'subversion' vcs support
- * Web UI
- * 'archive' vcs support (supporting both file:// and http://)
- * 'ssh' dispatcher
- * 'gearman' dispatcher
- * 'html' reports
- * 'xml' reports
- * 'yaml' reports
- * 'json' reports
- * Web service to get the data
- * Web service to remotely control the server
+ * Command line utility to list repositories.
+ * Command line utility to display server status (overall + detailed).
+ * Define build stages: configuration, build, test - each having separate command and status.
+    * Built-in support for TAP::Harness (so Reksio can list tests).
+ * Dispatch commands in paralel (run more then one command at once).
+ * 'subversion' vcs support.
+ * Web UI.
+ * 'archive' vcs support (supporting both file:// and http://).
+ * 'ssh' dispatcher.
+ * 'gearman' dispatcher.
+ * 'html' reports.
+ * 'xml' reports.
+ * 'yaml' reports.
+ * 'json' reports.
+ * Web service to get the data.
+ * Web service to remotely control the server.
  * If tests fail, compress working directory and store for later inspection.
- * Ability to 'pause' and 'resume' (starting of) builds
- * Support for branches in GIT
- * Bulk storage - either DB-based or FS-based (configurable)
- * Charts (in Web UI)
+ * Ability to 'pause' and 'resume' (starting of) builds.
+ * Support for branches in GIT.
+ * Bulk storage - either DB-based or FS-based (configurable).
+ * Charts (in Web UI).
+ * Improve users/notifications configuration.
+    * Reksio totally ognores, that two different repos can have same user ID pointing to different person
 

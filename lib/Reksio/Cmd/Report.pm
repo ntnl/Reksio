@@ -17,11 +17,13 @@ my $VERSION = '0.1.0';
 
 use Reksio::API::Config qw( get_config_option );
 use Reksio::API::Data qw( get_repository get_revision get_build get_result update_result get_last_result );
+use Reksio::API::User qw( get_user_by_vcs_id );
 use Reksio::Cmd;
 
 use Carp::Assert::More qw( assert_defined );
 use English qw( -no_match_vars );
 use File::Slurp qw( read_file write_file );
+use MIME::Lite;
 use Params::Validate qw( :all );
 use YAML::Any qw( DumpFile LoadFile );
 # }}}
@@ -65,6 +67,8 @@ sub main { # {{{
         id => $result_B->{'revision_id'},
     );
 
+    my $user = ( get_user_by_vcs_id($revision_B->{'commiter'}) or {} );
+
     my $build_results_dir = get_config_option('build_results');
     assert_defined($build_results_dir);
 
@@ -98,6 +102,26 @@ sub main { # {{{
     write_file($basedir_B . $result_B->{'id'} .q{-report.txt}, $report);
 
     # Send the report by email...
+
+    if ($user->{'email'}) {
+#        warn $user->{'email'};
+        my $msg = MIME::Lite->new(
+#            From    => 'me@myhost.com', # TODO
+            To      => $user->{'email'},
+#            Cc       =>'some@other.com, some@more.com', # TODO
+            Subject => 'Helloooooo, nurse!',
+            Data    => $report,
+        );
+
+        if ($ENV{'TEST_EMAIL'}) {
+            # FIXME: Note to self: current solution is not clean. Reimplement.
+            # Fake the message object if running in test mode.
+            require Reksio::Test::Email;
+            $msg = Reksio::Test::Email->new_fake_msg($msg);
+        }
+
+        $msg->send();
+    }
 
     print "Report for result ". $result_B->{'id'} ." complete.\n";
 

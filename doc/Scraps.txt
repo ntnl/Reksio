@@ -42,6 +42,9 @@
  build_results
     directory where build-result-data is stored
 
+ users_file
+    Location of the "Users file"
+
  Config file location:
 
     $ENV{REKSIO_CONFIG}
@@ -51,4 +54,19 @@
     ~/.reksio.conf
     /etc/reksio
     /etc/reksio.conf
+
+ Reporting
+
+    1) map VCS logins to Reksio user ids.
+    2) assign Reksio user ids to contact infromation
+    3) Barely enough is to put this information into a YAML file
+
+---
+"User Name":
+  vcs_ids:
+    - "Bartłomiej Syguła"
+    - natanael
+  email: reksio@natanael.krakow.pl
+
+
 

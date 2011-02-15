@@ -34,6 +34,7 @@ plan tests =>
 
 my $basedir = fake_installation_with_data($Bin .q{/../../t_data/});
 
+$ENV{'TEST_EMAIL'} = 1;
 
 my $exit_code;
 
