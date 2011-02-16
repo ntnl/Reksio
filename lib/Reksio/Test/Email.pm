@@ -13,12 +13,17 @@ package Reksio::Test::Email;
 ################################################################################
 use strict; use warnings; # {{{
 
+use Carp::Assert::More qw( assert_defined );
 # }}}
 
 sub new_fake_msg { # {{{
-    my ( $class ) = @_;
+    my ( $class, $msg ) = @_;
 
-    my $self = {};
+    assert_defined($msg);
+
+    my $self = {
+        msg=>$msg,
+    };
 
     bless $self, $class;
 
@@ -28,11 +33,19 @@ sub new_fake_msg { # {{{
 my @debug_stack;
 
 sub send { # {{{
-    my ( $self, $msg ) = @_;
+    my ( $self ) = @_;
 
-    push @debug_stack, $msg;
+    push @debug_stack, $self->{'msg'};
 
     return;
+} # }}}
+
+sub get_debug_stack { # {{{
+    my $stack = [ @debug_stack ];
+    
+    @debug_stack = ();
+
+    return $stack;
 } # }}}
 
 # vim: fdm=marker

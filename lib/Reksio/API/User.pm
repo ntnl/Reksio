@@ -38,11 +38,15 @@ sub get_user_by_name { # {{{
 
     my $users_file = LoadFile($users_file_path);
 
-    return {
-        %{ ( $users_file->{$name} or q{} ) },
+    if ($users_file->{$name}) {
+        return {
+            %{ ( $users_file->{$name} or q{} ) },
 
-        id => $name
-    };
+            id => $name
+        };
+    }
+
+    return;
 } # }}}
 
 sub get_user_by_vcs_id { # {{{
