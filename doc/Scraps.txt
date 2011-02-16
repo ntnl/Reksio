@@ -70,3 +70,40 @@
 
 
 
+ Dispatching
+
+    First stage (barely enough):
+
+        foreach $repo
+            Inspect
+            foreach $revision
+                foreach build
+                    Schedule a build
+                    Run Build
+                    Do Report
+        if nothing was done - wait a while
+
+    Second stage (parallel processing):
+
+        foreach $thing (Inspect, Build, Report)
+            Is there something to $do?
+                Yes - Is it queued?
+                    No - Queue.
+
+            Is there something queued for $doing?
+                Yes - Inspect.
+                Remove from queue.
+
+        Queue handling is common across all functionality.
+        Harvesting candidates is similar:
+            Inspect harvests Repositories, that "need inspecting"
+                - time since last inspect > configured interval (add such option to Repo table)
+            Build harvests Build+Revision pairs
+                - there are less then configured such builds running (add such option to Build table)
+                - there are less then configured builds for repo running (add such option to Repo table)
+                - there are less then configured (server-wide) builds running (add config option)
+                - there are unbuilt revisions
+            Report harvests Results
+                - no reports are running for the repo
+                - there are unreported Results
+

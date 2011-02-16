@@ -80,9 +80,9 @@
 [X]                 Get emails for user/repository
 [X]             Compose and send message
 [X]     Automated test
-[ ] Dispatch functionality
+[>] Dispatch functionality
+[X]     Plan the whole thing
 [ ]     Common initialization (config and help)
-[ ]     Implement 'Local' dispatcher
 [ ]     Run Inspect script
 [ ]         Identify what needs to be updated
 [ ]         Execute the inspect command
@@ -131,6 +131,8 @@
  * Define build stages: configuration, build, test - each having separate command and status.
     * Built-in support for TAP::Harness (so Reksio can list tests).
  * Dispatch commands in paralel (run more then one command at once).
+    * Implement 'Local' dispatcher
+    * Transition Inspect, Build and Report into dispatcher framework.
  * 'subversion' vcs support.
  * Web UI.
  * 'archive' vcs support (supporting both file:// and http://).
