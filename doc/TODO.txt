@@ -82,7 +82,7 @@
 [X]     Automated test
 [>] Dispatch functionality
 [X]     Plan the whole thing
-[ ]     Common initialization (config and help)
+[X]     Common initialization (config and help)
 [ ]     Run Inspect script
 [ ]         Identify what needs to be updated
 [ ]         Execute the inspect command
@@ -151,4 +151,6 @@
  * Charts (in Web UI).
  * Improve users/notifications configuration.
     * Reksio totally ognores, that two different repos can have same user ID pointing to different person
-
+ * Add -c/--config command line option
+ * Measure, log and report Build (config, build, test) time.
+ * Store information about who started the build (manually, automatic)
