@@ -23,6 +23,7 @@ CREATE TABLE reksio_Build (
     test_command    VARCHAR(1024),
 
     frequency       VARCHAR(32),
+        -- PAUSED - do not build this one. Can still be scheduled manually.
         -- EACH - run this build for each revision/commit
         -- RECENT - run always on most recent revision/commit (possibly skipping commits)
         -- HOURLY - run not often, then once per hour (on recent commit, unless already build)
@@ -49,8 +50,8 @@ CREATE TABLE reksio_Revision (
 
     status CHAR(1)
         -- N - new (not touched)
-        -- S - all mandatory builds for this revision have been scheduled
-        -- B - all scheduled builds complete
+        -- S - scheduled all mandatory builds for this revision have been scheduled
+        -- D - done all scheduled builds complete (or none needed)
 );
 CREATE UNIQUE INDEX reksio_Revision_commit_id ON reksio_Revision (repository_id, commit_id);
 
@@ -61,9 +62,10 @@ CREATE TABLE reksio_Result (
 
     build_status CHAR(1) DEFAULT 'N',
         -- N - New (scheduled for testing)
+        -- S - Starting up...
         -- R - Running
         -- P - Finished (Positive)
-        -- N - Finished (Negative)
+        -- F - Finished (Negative = False)
         -- E - Internal error happened during the build
 
     build_stage CHAR(1) DEFAULT 'N',
@@ -76,8 +78,9 @@ CREATE TABLE reksio_Result (
 
     report_status CHAR(1) DEFAULT 'N',
         -- N - New - this is a new result, there is nothing to report just yet.
-        -- W - Waiting - previous commit was not tested, thus report can not be generated yet.
-        -- S - Scheduled - report can be generated.
+        -- W - Waiting - previous commit was not tested, thus report for _this_ commit can not be generated yet (there is nothing to compare to).
+        -- S - Starting up...
+        -- B - Built - This was built, and report can be generated.
         -- R - Running
         -- D - Done - report for this result was generated.
 

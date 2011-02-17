@@ -83,16 +83,16 @@
 [>] Dispatch functionality
 [X]     Plan the whole thing
 [X]     Common initialization (config and help)
-[ ]     Run Inspect script
-[ ]         Identify what needs to be updated
-[ ]         Execute the inspect command
-[ ]     Run Build script
-[ ]         Harvest non-built revisions and schedule builds
-[ ]         Execute the build command
-[ ]     Run Report script
-[ ]         Harvest not-reported builds and schedule reports
-[ ]         Execute the report command
-[ ]     Automated test
+[X]     Run Inspect script
+[X]         Identify what needs to be updated
+[X]         Execute the inspect command
+[X]     Run Build script
+[X]         Harvest non-built revisions and schedule builds
+[X]         Execute the build command
+[X]     Run Report script
+[X]         Harvest not-reported builds and schedule reports
+[X]         Execute the report command
+[>]     Automated test
 [ ] Release beta version
 [ ]     Field testing - max 3-5 days
 [ ]         Deploy on private server, watch own repository.
@@ -131,8 +131,8 @@
  * Define build stages: configuration, build, test - each having separate command and status.
     * Built-in support for TAP::Harness (so Reksio can list tests).
  * Dispatch commands in paralel (run more then one command at once).
-    * Implement 'Local' dispatcher
-    * Transition Inspect, Build and Report into dispatcher framework.
+    * Implement 'Exec' dispatcher
+    * Transition 'Inspect', 'Build' and 'Report' into dispatcher framework.
  * 'subversion' vcs support.
  * Web UI.
  * 'archive' vcs support (supporting both file:// and http://).

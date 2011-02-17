@@ -154,6 +154,10 @@ sub main { # {{{
         update_result(
             %result_update,
 
+            build_stage => 'D',
+
+            report_status => 'B', # FIXME: sometimes this should be 'W' (!!!), but this will matter when command will be run in parallel.
+
             id => $result->{'id'},
         );
     }
@@ -251,7 +255,7 @@ sub _analyze_tap_report { # {{{
             my $result = $1;
 
             if ($result eq 'FAIL') {
-                $report{'status'} = 'N';
+                $report{'status'} = 'F';
         
                 last;
             }

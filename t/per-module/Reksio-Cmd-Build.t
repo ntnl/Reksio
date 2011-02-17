@@ -100,9 +100,9 @@ is_deeply(
         revision_id => $rev1_id,
         build_id    => $b1_id,
 
-        build_status  => 'N',
-        build_stage   => 'N',
-        report_status => 'N',
+        build_status  => 'F',
+        build_stage   => 'D',
+        report_status => 'B',
 
         total_tests_count  => 3,
         total_cases_count  => 8,

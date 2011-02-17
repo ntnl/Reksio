@@ -16,7 +16,7 @@ use FindBin qw( $Bin );
 use lib $Bin .q{/../../lib};
 
 use Reksio::API::Data qw( add_repository add_build add_revision schedule_build get_result );
-use Reksio::Test::Setup qw( fake_installation_with_data );
+use Reksio::Test::Setup qw( fake_installation fake_repository );
 
 use File::Slurp qw( read_file );
 use Test::More;
@@ -28,10 +28,24 @@ use Reksio::Cmd::Dispatch;
 plan tests =>
     + 1 # check --help
     + 1 # check --version
-#    + 5 # dispatch
+    + 2 # dispatch (run)
 ;
 
-my $basedir = fake_installation_with_data($Bin .q{/../../t_data/});
+# Prepare "fake
+my $basedir = fake_installation($Bin .q{/../../t_data/});
+my $fake_repo_path = fake_repository($Bin .q{/../../t_data/});
+
+my $r1_id = add_repository(name => 'First', vcs=>'GIT', uri=>$fake_repo_path);
+my $b1_id = add_build(
+    repository_id => $r1_id,
+
+    name => 'Prove',
+
+    test_command => 'prove t/',
+
+    frequency        => 'EACH',
+    test_result_type => 'TAP'
+);
 
 my $exit_code;
 
@@ -48,6 +62,9 @@ stdout_like {
 
 # --- Check functionality
 
-
+stdout_like {
+    $exit_code = Reksio::Cmd::Dispatch::main('--single');
+} qr{Dispatch : ended}, q{Dispatch - was run};
+is($exit_code, 0, q{Dispatch - clean exit code});
 
 # vim: fdm=marker

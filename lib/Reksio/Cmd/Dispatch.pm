@@ -16,7 +16,7 @@ use strict; use warnings; # {{{
 my $VERSION = '0.1.0';
 
 use Reksio::API::Config qw( get_config_option );
-use Reksio::API::Data qw( get_repository get_revision get_build get_result update_result );
+use Reksio::API::Data qw( get_repositories get_revisions get_builds get_results schedule_build update_result );
 use Reksio::Cmd;
 
 use Carp::Assert::More qw( assert_defined );
@@ -28,7 +28,7 @@ sub main { # {{{
 
     my @param_config = (
         {
-            param => q{sindle},
+            param => q{single},
             desc  => q{Do just a single round, then exit.},
             type  => q{},
 
@@ -40,11 +40,186 @@ sub main { # {{{
 
     print "Dispatch : started\n";
 
-    # ...
+    # Note:
+    #   Since at any time a repository or build can be added or changed,
+    #   in each loop their data is re-read from DB. This is not a huge amount of
+    #   data, so it should not cause problems.
+    while (1) {
+        my $repos = get_repositories();
+
+        # This flag will be raised when at least one Build or Report was made.
+        my $i_did_something = 0;
+
+        # Process repository after repository.
+        # Probably for near future, Reksio will not be used by BIG projects,
+        # so a simple round-robin algorytm should be OK.
+        foreach my $repo (@{ $repos }) {
+            # Get builds for this repository.
+            # This is because if it has none - We will not inspect it.
+            my $builds = get_builds(
+                repository_id => $repo->{'id'},
+            );
+            
+            my %build_by_id;
+            foreach my $build (@{ $builds }) {
+                $build_by_id{$build->{'id'}} = $build;
+            }
+
+            if (not scalar @{ $builds }) {
+                # No builds - skip this repository.
+                next;
+            }
+    
+            printf "Dispatch : inspecting repository: '%s'\n", $repo->{'name'};
+
+            # Inspect the repository.
+            run_command(q{Inspect}, q{--repo}, $repo->{'name'});
+
+            # Search for revisions, that require Building.
+            my $revisions = get_revisions(
+                repository_id => $repo->{'id'},
+                status        => 'N',
+            );
+
+            # If there are revisions, check if they should be scheduled...
+            if (scalar @{ $revisions }) {
+                my %revisions_processed;
+
+                # Check what kind of builds there are, and schedule them.
+                foreach my $build (@{ $builds }) {
+                    if ($build->{'frequency'} eq 'EACH') {
+                        # This build has to be scheduled for each revision in this repository.
+                        foreach my $revision (@{ $revisions }) {
+                            schedule_build(
+                                revision_id => $revision->{'id'},
+                                build_id    => $build->{'id'},
+                            );
+
+                            $revisions_processed{$revision->{'id'}} = 1;
+                        }
+
+                        next;
+                    }
+
+                    if ($build->{'frequency'} eq 'RECENT') {
+                        # Build just the most recent revision.
+
+                        die("Not implemented yet!"); # FIXME: Implement!
+                        # Note to self:
+                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+                        #   but with n-m commit instead.
+
+                        next;
+                    }
+
+                    if ($build->{'frequency'} eq 'HOURLY') {
+                        # Build most recent revision, only if there was at least an hour since last build.
+
+                        die("Not implemented yet!"); # FIXME: Implement!
+                        # Note to self:
+                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+                        #   but with n-m commit instead.
+
+                        next;
+                    }
+
+                    if ($build->{'frequency'} eq 'DAILY') {
+                        # Build most recent revision, but only once per day.
+
+                        die("Not implemented yet!"); # FIXME: Implement!
+                        # Note to self:
+                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+                        #   but with n-m commit instead.
+
+                        next;
+                    }
+
+                    # There can be a 'PAUSED' frequency too,
+                    # meaning "do not run this build at all".
+                    # This is implementing simply by ignoring such build...
+                }
+            
+                # At this point, revisions, that should be processed, should have the 'S' flag set.
+                # All others should get a 'D' (Done).
+                foreach my $revision (@{ $revisions }) {
+                    if (not $revisions_processed{$revision->{'id'}}) {
+                        update_revision(
+                            id => $revision->{'id'},
+
+                            status => 'D',
+                        );
+                    }
+                }
+            }
+
+            # Check for any scheduled builds.
+            # Those can be the ones We just scheduled, but also those scheduled (or re-scheduled) manually.
+            my $results_to_build = get_results(
+                build_id => [ keys %build_by_id ],
+
+                build_status => [qw( P F E )],
+            );
+
+            # Run Builds :)
+            foreach my $result (@{ $results_to_build }) {
+                update_result(
+                    id => $result->{'id'},
+
+                    build_status => q{S},
+                );
+
+                run_command(q{Build}, q{--result_id}, $result->{'id'});
+            }
+
+            # Check if there are Results, that Reksio should report about?
+            my $results_to_report = get_results(
+                build_id => [ keys %build_by_id ],
+
+                report_status => [qw( B )],
+            );
+
+            # Run reports :)
+            foreach my $result (@{ $results_to_report }) {
+                update_result(
+                    id => $result->{'id'},
+
+                    report_status => q{S},
+                );
+
+                run_command(q{Report}, q{--result_id}, $result->{'id'});
+            }
+        }
+
+        if ($options->{'single'}) {
+            print "Dispatch : single round complete.\n";
+            last;
+        }
+
+        if (not $i_did_something) {
+            print "Dispatch : idle run, going to sleep for a while.\n";
+            sleep 5;
+        }
+    }
 
     print "Dispatch : ended.\n";
 
     return 0;
+} # }}}
+
+sub run_command { # {{{
+    my ( $command, @params ) = @_;
+
+    # FIXME: fork would be cool here :)
+
+    my $command_module = q{Reksio/Cmd/} . $command . q{.pm};
+
+    require $command_module;
+
+    my $main_sub_name = q{Reksio::Cmd::} . $command . q{::main};
+
+    my $main_sub = \&{ $main_sub_name };
+
+    return $main_sub->(@params);
 } # }}}
 
 # vim: fdm=marker

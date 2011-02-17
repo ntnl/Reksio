@@ -95,7 +95,7 @@ my $rep_1 = Reksio::Cmd::Build::_analyze_tap_report($input_1);
 is_deeply(
     $rep_1,
     { # {{{
-        status => q{N},
+        status => q{F},
 
         total_tests_count  => 6,
         total_cases_count  => 22,
