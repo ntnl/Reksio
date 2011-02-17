@@ -35,6 +35,7 @@ use Reksio::API::Data qw(
     get_revision
     get_last_revision
     get_revisions
+    update_revision
     delete_revision
 
     schedule_build
@@ -48,17 +49,22 @@ use Reksio::API::Data qw(
 plan tests =>
     + 2 # add_repository
     + 4 # get_repository
+    + 1 # get_repositories
 
     + 3 # add_build
     + 4 # get_build
+    + 1 # get_builds
     + 2 # delete_build
 
     + 1 # add_revision
     + 2 # get_revision
+    + 1 # get_revision
     + 1 # get_last_revision
+    + 1 # update_revision
 
     + 1 # schedule a build
     + 1 # get_result
+    + 1 # get_results
     + 1 # update_result
 ;
 
@@ -105,6 +111,27 @@ is_deeply(
         uri  => 'https://foo/bar.git',
     },
     q{get_repository - by name (ask for existing one)}
+);
+
+is_deeply(
+    [
+        sort {$a->{'id'} <=> $b->{'id'}} @{ get_repositories() }
+    ],
+    [
+        {
+            id   => $r1_id,
+            name => 'First',
+            vcs  => 'CVS',
+            uri  => 'cvs://foo/bar',
+        },
+        {
+            id   => $r2_id,
+            name => 'Second',
+            vcs  => 'GIT',
+            uri  => 'https://foo/bar.git',
+        },
+    ],
+    q{get_repositories}
 );
 
 ################################################################################
@@ -199,6 +226,43 @@ is_deeply(
         test_result_type => 'POD',
     },
     q{get_build - by name - existing build}
+);
+
+is_deeply(
+    [
+        sort {$a->{'id'}<=>$a->{'id'}} @{ get_builds(repository_id => $r1_id) }
+    ],
+    [
+        {
+            id => $b1_id,
+
+            repository_id => $r1_id,
+
+            name => 'Integrate',
+
+            config_command => q{./Build.PL},
+            build_command  => q{./Build},
+            test_command   => q{prove},
+
+            frequency        => 'EACH',
+            test_result_type => 'NONE',
+        },
+        {
+            id => $b2_id,
+
+            repository_id => $r1_id,
+
+            name => q{Coverage test},
+
+            config_command => q{./Build.PL},
+            build_command  => q{./Build},
+            test_command   => q{prove_cover},
+
+            frequency        => 'RECENT',
+            test_result_type => 'EXITCODE'
+        },
+    ],
+    q{get_builds()}
 );
 
 is(
@@ -304,6 +368,66 @@ is_deeply(
     q{get_last_revision},
 );
 
+is_deeply(
+    [
+        sort {$a->{'id'} <=> $b->{'id'}} @{ get_revisions(repository_id => $r1_id) }
+    ],
+    [
+        {
+            id => $rev1_id,
+
+            repository_id => $r1_id,
+
+            commit_id        => q{r0001},
+            parent_commit_id => undef,
+
+            commiter  => 'Bartłomiej Syguła',
+            message   => 'First test',
+            timestamp => '1297338154',
+
+            status => 'N',
+        },
+        {
+            id => $rev2_id,
+
+            repository_id => $r1_id,
+
+            commit_id        => q{r0002},
+            parent_commit_id => q{r0001},
+
+            timestamp => 1297338432,
+            commiter  => 'Bartłomiej Syguła',
+            message   => 'Third test "fixed" ;)',
+
+            status => 'N',
+        },
+    ],
+    'get_revisions',
+);
+
+update_revision(
+    id     => $rev2_id,
+    status => 'D',
+);
+is_deeply(
+    get_revision( id=>$rev2_id ),
+        {
+            id => $rev2_id,
+
+            repository_id => $r1_id,
+
+            commit_id        => q{r0002},
+            parent_commit_id => q{r0001},
+
+            timestamp => 1297338432,
+            commiter  => 'Bartłomiej Syguła',
+            message   => 'Third test "fixed" ;)',
+
+            status => 'D',
+        },
+    q{update_revision - check},
+);
+
 ################################################################################
 #
 #                           Result level tests
@@ -370,6 +494,33 @@ is_deeply(
         failed_tests_count => 5,
         failed_cases_count => 0,
     },
+    q{update_result - change verified}
+);
+is_deeply(
+    [
+        sort {$a->{'id'} <=> $b->{'id'}} @{ get_results(build_id => $b1_id, build_stage=>'D', report_status=>'N') }
+    ],
+    [
+        {
+            id => $res1_id,
+
+            revision_id => $rev1_id,
+            build_id    => $b1_id,
+
+            build_status  => 'P',
+            build_stage   => 'D',
+            report_status => 'N',
+
+            date_queued => 0,
+            date_start  => 0,
+            date_finish => 0,
+
+            total_tests_count  => 25,
+            total_cases_count  => 0,
+            failed_tests_count => 5,
+            failed_cases_count => 0,
+        },
+    ],
     q{update_result - change verified}
 );
 

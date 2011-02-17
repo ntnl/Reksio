@@ -37,6 +37,7 @@ our @EXPORT_OK = qw(
     get_revision
     get_last_revision
     get_revisions
+    update_revision
     delete_revision
 
     schedule_build
@@ -92,9 +93,19 @@ sub get_repository { # {{{
     return $repo;
 } # }}}
 
-# TODO
-#sub get_repositories { # {{{
-#} # }}}
+sub get_repositories { # {{{
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Repository',
+        [qw( id name vcs uri )],
+    );
+
+    my @repos;
+    while (my $repo = $sth->fetchrow_hashref()) {
+        push @repos, $repo;
+    }
+
+    return \@repos;
+} # }}}
 
 # TODO: What, if repo has builds?
 sub delete_repository { # {{{
@@ -176,9 +187,31 @@ sub get_build { # {{{
     return $repo;
 } # }}}
 
-# TODO
-#sub get_builds { # {{{
-#} # }}}
+sub get_builds { # {{{
+    my %P = validate(
+        @_,
+        {
+            name          => { type=>SCALAR | ARRAYREF, optional=>1 },
+            repository_id => { type=>SCALAR | ARRAYREF, optional=>1 },
+            id            => { type=>SCALAR | ARRAYREF, optional=>1 },
+        },
+    );
+    
+    # FIXME: check if any parameter was passed.
+
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Build',
+        [qw( id name repository_id config_command build_command test_command frequency test_result_type )],
+        \%P,
+    );
+
+    my @builds;
+    while (my $build = $sth->fetchrow_hashref()) {
+        push @builds, $build;
+    }
+
+    return \@builds;
+} # }}}
 
 sub delete_build { # {{{
     my %P = validate(
@@ -280,9 +313,62 @@ sub get_last_revision { # {{{
     return $rev;
 } # }}}
 
-# TODO
-#sub get_revisions { # {{{
-#} # }}}
+sub get_revisions { # {{{
+    my %P = validate(
+        @_,
+        {
+            id            => { type=>SCALAR | ARRAYREF, optional=>1 },
+            repository_id => { type=>SCALAR | ARRAYREF, optional=>1 },
+            commit_id     => { type=>SCALAR | ARRAYREF, optional=>1 },
+            status        => { type=>SCALAR | ARRAYREF, optional=>1 },
+            commiter      => { type=>SCALAR | ARRAYREF, optional=>1 },
+        },
+    );
+
+    # FIXME: check if any parameter was passed.
+
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Revision',
+        [qw( id repository_id commit_id parent_commit_id timestamp commiter message status )],
+        \%P,
+    );
+
+    my @revisions;
+    while (my $rev = $sth->fetchrow_hashref()) {
+        push @revisions, $rev;
+    }
+    return \@revisions;
+} # }}}
+
+sub update_revision { # {{{
+    my %P = validate(
+        @_,
+        {
+            id => { type=>SCALAR },
+
+            commit_id        => { type=>SCALAR, optional=>1 },
+            parent_commit_id => { type=>SCALAR | UNDEF, optional=>1 },
+
+            timestamp => { type=>SCALAR, optional=>1 },
+            commiter  => { type=>SCALAR, optional=>1 },
+            message   => { type=>SCALAR, optional=>1 },
+            
+            status => { type=>SCALAR, optional=>1 },
+        },
+    );
+
+    # FIXME: Check, if there was something else given, beside ID.
+
+    my $revision_id = delete $P{'id'};
+
+    return Reksio::Core::DB::do_update(
+        'reksio_Revision',
+        \%P,
+        {
+            id => $revision_id,
+        }
+    );
+} # }}}
 
 # TODO
 #sub delete_revision { # {{{
@@ -336,9 +422,9 @@ sub get_result { # {{{
         [qw( id revision_id build_id build_status build_stage report_status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
         \%P,
     );
-    my $rev = $sth->fetchrow_hashref();
+    my $result = $sth->fetchrow_hashref();
 
-    return $rev;
+    return $result;
 } # }}}
 
 # FIXME: cover this function in automated tests dedicated for this module.
@@ -364,9 +450,35 @@ sub get_last_result { # {{{
     return $rev;
 } # }}}
 
-# TODO
-#sub get_results { # {{{
-#} # }}}
+sub get_results { # {{{
+    my %P = validate(
+        @_,
+        {
+            id => { type=>SCALAR | ARRAYREF, optional=>1 },
+
+            revision_id => { type=>SCALAR | ARRAYREF, optional=>1 },
+            build_id    => { type=>SCALAR | ARRAYREF, optional=>1 },
+
+            build_status  => { type=>SCALAR | ARRAYREF, optional=>1 },
+            build_stage   => { type=>SCALAR | ARRAYREF, optional=>1 },
+            report_status => { type=>SCALAR | ARRAYREF, optional=>1 },
+        },
+    );
+
+    # FIXME: Check, if at least one parameter was given.
+
+    my $sth = Reksio::Core::DB::do_select(
+        'reksio_Result',
+        [qw( id revision_id build_id build_status build_stage report_status date_queued date_start date_finish total_tests_count total_cases_count failed_tests_count failed_cases_count )],
+        \%P,
+    );
+    my @results;
+    while (my $result = $sth->fetchrow_hashref()) {
+        push @results, $result;
+    }
+
+    return \@results;
+} # }}}
 
 sub update_result { # {{{
     my %P = validate(
