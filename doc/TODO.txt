@@ -80,7 +80,7 @@
 [X]                 Get emails for user/repository
 [X]             Compose and send message
 [X]     Automated test
-[>] Dispatch functionality
+[X] Dispatch functionality
 [X]     Plan the whole thing
 [X]     Common initialization (config and help)
 [X]     Run Inspect script
@@ -92,10 +92,10 @@
 [X]     Run Report script
 [X]         Harvest not-reported builds and schedule reports
 [X]         Execute the report command
-[>]     Automated test
-[ ] Release beta version
-[ ]     Field testing - max 3-5 days
-[ ]         Deploy on private server, watch own repository.
+[X]     Automated test
+[>] Release beta version
+[>]     Field testing - max 3-5 days
+[>]         Deploy on private server, watch own repository.
 [ ]         Write missing documentation
 [ ]         Improve test coverage
 [ ]         Debug

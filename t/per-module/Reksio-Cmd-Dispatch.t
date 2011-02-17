@@ -31,9 +31,11 @@ plan tests =>
     + 2 # dispatch (run)
 ;
 
-# Prepare "fake
+# Prepare "fake" environment. % {{{
 my $basedir = fake_installation($Bin .q{/../../t_data/});
 my $fake_repo_path = fake_repository($Bin .q{/../../t_data/});
+
+$ENV{'TEST_EMAIL'} = 1;
 
 my $r1_id = add_repository(name => 'First', vcs=>'GIT', uri=>$fake_repo_path);
 my $b1_id = add_build(
@@ -46,6 +48,7 @@ my $b1_id = add_build(
     frequency        => 'EACH',
     test_result_type => 'TAP'
 );
+# }}}
 
 my $exit_code;
 
@@ -62,9 +65,14 @@ stdout_like {
 
 # --- Check functionality
 
+#warn Reksio::Cmd::Dispatch::main('--single');
+#system q{tree}, $basedir;
+
 stdout_like {
     $exit_code = Reksio::Cmd::Dispatch::main('--single');
 } qr{Dispatch : ended}, q{Dispatch - was run};
 is($exit_code, 0, q{Dispatch - clean exit code});
+
+#  Add more checks here...!
 
 # vim: fdm=marker

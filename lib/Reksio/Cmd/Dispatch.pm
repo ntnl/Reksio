@@ -157,11 +157,13 @@ sub main { # {{{
             my $results_to_build = get_results(
                 build_id => [ keys %build_by_id ],
 
-                build_status => [qw( P F E )],
+                build_status => [qw( N )],
             );
 
             # Run Builds :)
             foreach my $result (@{ $results_to_build }) {
+                printf "Dispatch : building '%d'\n", $result->{'id'};
+
                 update_result(
                     id => $result->{'id'},
 
@@ -180,6 +182,8 @@ sub main { # {{{
 
             # Run reports :)
             foreach my $result (@{ $results_to_report }) {
+                printf "Dispatch : reporting about '%d'\n", $result->{'id'};
+
                 update_result(
                     id => $result->{'id'},
 
