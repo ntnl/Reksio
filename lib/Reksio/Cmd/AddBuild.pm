@@ -65,7 +65,7 @@ sub main { # {{{
         },
         {
             param => q{test_result_type},
-            desc  => q{Expected output format (NONE, EXITCODE, POD).},
+            desc  => q{Expected output format (NONE, EXITCODE, TAP).},
             type  => q{s},
 
             required => 1,

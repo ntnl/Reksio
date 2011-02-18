@@ -75,7 +75,7 @@ sub main { # {{{
     my $basedir_B = $build_results_dir . $repo->{'id'} .q{/}. $revision_B->{'id'} .q{/build_} . $build->{'id'} .q{/};
     my $details_B = LoadFile($basedir_B . $result_B->{'id'} .q{-details.yaml});
 
-    my $report = qq{\n};
+    my ( $report, $title );
     my ( $revision_A, $result_A, $details_A );
     if ($revision_B->{'parent_commit_id'}) {
         $revision_A = get_revision(
@@ -91,10 +91,10 @@ sub main { # {{{
         my $basedir_A = $build_results_dir . $repo->{'id'} .q{/}. $revision_A->{'id'} .q{/build_} . $build->{'id'} .q{/};
         $details_A = LoadFile($basedir_A . $result_A->{'id'} .q{-details.yaml});
 
-        $report .= _compare_revisions($repo, $build, $revision_A, $details_A, $revision_B, $details_B);
+        ( $report, $title ) = _compare_revisions($repo, $build, $revision_A, $details_A, $revision_B, $details_B);
     }
     else {
-        $report .= _describe_revision($repo, $build, $revision_B, $details_B);
+        ( $report, $title ) = _describe_revision($repo, $build, $revision_B, $details_B);
     }
     
 #    warn $report;
@@ -105,12 +105,13 @@ sub main { # {{{
 
     if ($user->{'email'}) {
 #        warn $user->{'email'};
+
         my $msg = MIME::Lite->new(
 #            From    => 'me@myhost.com', # TODO
             To      => $user->{'email'},
 #            Cc       =>'some@other.com, some@more.com', # TODO
-            Subject => 'Helloooooo, nurse!',
-            Data    => $report,
+            Subject => q{Reksio: } . $title,
+            Data    => qq{\n} . $report,
         );
 
         if ($ENV{'TEST_EMAIL'}) {
@@ -165,11 +166,14 @@ sub _compare_revisions { # {{{
     my ($repo, $build, $revision_A, $details_A, $revision_B, $details_B) = @_;
 
     my $report_text = _rep_describe_revision($revision_B);
+    my $report_title;
 
     if (not scalar keys %{ $details_A->{'tests'} } and not scalar keys %{ $details_B->{'tests'} }) {
         $report_text .= _separator('All tests passed');
 
         $report_text .= "This commit passed all tests.";
+
+        $report_title = _title('Pass', $revision_B);
     }
     else {
         my %test_pool = (
@@ -219,20 +223,25 @@ sub _compare_revisions { # {{{
                 );
             }
         }
+
+        $report_title = _title('Fail', $revision_B); # FIXME: Distinguish between Fixed, Broken, Fail.
     }
 
-    return $report_text;
+    return ( $report_text, $report_title );
 } # }}}
 
 sub _describe_revision { # {{{
     my ($repo, $build, $revision, $details) = @_;
 
     my $report_text = _rep_describe_revision($revision);
+    my $report_title;
 
     if (not scalar keys %{ $details->{'tests'} }) {
         $report_text .= _separator('All tests passed');
 
         $report_text .= "This commit passed all tests.";
+
+        $report_title = _title('Pass', $revision);
     }
     else {
         $report_text .= _separator('Tests broken by this commit');
@@ -244,9 +253,22 @@ sub _describe_revision { # {{{
                 status  => $details->{'tests'}->{$test}->{'status'},
             );
         }
+
+        $report_title = _title('Fail', $revision);
     }
 
-    return $report_text;
+    return ( $report_text, $report_title );
+} # }}}
+
+sub _title { # {{{
+    my ( $status, $revision ) = @_;
+
+    my %text = (
+        'Fail' => q{Failed (revision: }. $revision->{'commit_id'} .q{)},
+        'Pass' => q{Passed (revision: }. $revision->{'commit_id'} .q{)},
+    );
+
+    return $text{$status};
 } # }}}
 
 sub _rep_describe_revision { # {{{

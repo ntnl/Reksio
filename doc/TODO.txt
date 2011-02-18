@@ -95,13 +95,17 @@
 [X]     Automated test
 [>] Release beta version
 [>]     Field testing - max 3-5 days
-[ ]         Make a package (Module::Build)
 [X]         Deploy on private server, watch own repository.
 [>]         Write missing documentation
 [ ]         Improve test coverage
-[ ]         Debug
+[>]         Debug
+[X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
+[X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
+[ ]             Dispatch required --single=0, otherwise dumps help. Blocker.
+[ ]             Add timestamp/date to Dispatch log-like output
 [ ]     Prepare stuff to upload
 [ ]         Make a (spartan) website
+[ ]         Make a package (Module::Build)
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
 [ ]         Generate source code dump
@@ -120,9 +124,6 @@
 
  Known issues to be resolved
 
- * Dispatch required --single=0, otherwise dumps help. Blocker.
- * Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
- * Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
  * more strict validation of input parameters (at the moment, Reksio trusts the User)
  * some automated tests are based on GIT test repo. Those will not run, if someone has not installed git :(
  * tmp directory should be configurable in settings file

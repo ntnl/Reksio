@@ -53,7 +53,7 @@ sub main { # {{{
         # Process repository after repository.
         # Probably for near future, Reksio will not be used by BIG projects,
         # so a simple round-robin algorytm should be OK.
-        foreach my $repo (@{ $repos }) {
+        foreach my $repo (_id_sort($repos)) {
             # Get builds for this repository.
             # This is because if it has none - We will not inspect it.
             my $builds = get_builds(
@@ -61,7 +61,7 @@ sub main { # {{{
             );
             
             my %build_by_id;
-            foreach my $build (@{ $builds }) {
+            foreach my $build (_id_sort($builds)) {
                 $build_by_id{$build->{'id'}} = $build;
             }
 
@@ -86,10 +86,10 @@ sub main { # {{{
                 my %revisions_processed;
 
                 # Check what kind of builds there are, and schedule them.
-                foreach my $build (@{ $builds }) {
+                foreach my $build (_id_sort($builds)) {
                     if ($build->{'frequency'} eq 'EACH') {
                         # This build has to be scheduled for each revision in this repository.
-                        foreach my $revision (@{ $revisions }) {
+                        foreach my $revision (_id_sort($revisions)) {
                             schedule_build(
                                 revision_id => $revision->{'id'},
                                 build_id    => $build->{'id'},
@@ -147,7 +147,7 @@ sub main { # {{{
 
                 # At this point, revisions, that should be processed, should have the 'S' flag set.
                 # All others should get a 'D' (Done).
-                foreach my $revision (@{ $revisions }) {
+                foreach my $revision (_id_sort($revisions)) {
                     if (not $revisions_processed{$revision->{'id'}}) {
                         # This revision will not be processed by any build, We are done with it.
                         update_revision(
@@ -168,7 +168,8 @@ sub main { # {{{
             );
 
             # Run Builds :)
-            foreach my $result (@{ $results_to_build }) {
+            my $builds_done = 0;
+            foreach my $result (_id_sort($results_to_build)) {
                 printf "Dispatch : building '%d'\n", $result->{'id'};
 
                 update_result(
@@ -178,6 +179,14 @@ sub main { # {{{
                 );
 
                 run_command(q{Build}, q{--result_id}, $result->{'id'});
+
+                $i_did_something = 1;
+
+                $builds_done++;
+                if ($builds_done >= 10) {
+                    printf "Dispatch : switching to other work after 10 reports.\n";
+                    last;
+                }
             }
 
             # Check if there are Results, that Reksio should report about?
@@ -188,7 +197,8 @@ sub main { # {{{
             );
 
             # Run reports :)
-            foreach my $result (@{ $results_to_report }) {
+            my $reports_done = 0;
+            foreach my $result (_id_sort($results_to_report)) {
                 printf "Dispatch : reporting about '%d'\n", $result->{'id'};
 
                 update_result(
@@ -198,6 +208,14 @@ sub main { # {{{
                 );
 
                 run_command(q{Report}, q{--result_id}, $result->{'id'});
+
+                $i_did_something = 1;
+
+                $reports_done++;
+                if ($reports_done >= 10) {
+                    printf "Dispatch : switching to other work after 10 reports.\n";
+                    last;
+                }
             }
         }
 
@@ -208,13 +226,25 @@ sub main { # {{{
 
         if (not $i_did_something) {
             print "Dispatch : idle run, going to sleep for a while.\n";
-            sleep 5;
+            sleep 75; # FIXME: This should be configurable!
         }
     }
 
     print "Dispatch : ended.\n";
 
     return 0;
+} # }}}
+
+=item _id_sort($stuff)
+
+Purpose: Sort hashrefs inside an arrayref using value from 'id' key.
+
+=cut
+
+sub _id_sort { # {{{
+    my ( $stuff ) = @_;
+
+    return sort { $a->{'id'} <=> $b->{'id'} } @{ $stuff };
 } # }}}
 
 sub run_command { # {{{
