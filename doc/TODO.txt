@@ -96,7 +96,7 @@
 [>] Release beta version
 [>]     Field testing - max 3-5 days
 [>]         Deploy on private server, watch own repository.
-[ ]         Write missing documentation
+[>]         Write missing documentation
 [ ]         Improve test coverage
 [ ]         Debug
 [ ]     Prepare stuff to upload
@@ -154,3 +154,5 @@
  * Add -c/--config command line option
  * Measure, log and report Build (config, build, test) time.
  * Store information about who started the build (manually, automatic)
+ * Provide a self-test command.
+

@@ -33,7 +33,7 @@ sub _find_config { # {{{
     my @choices = (
         $ENV{'REKSIO_CONFIG'},
         q{./.reksio.conf},
-        $ENV{'USER'} . q{/.reksio.conf}, # FIXME: will fail sometimes (probably) due to ENV{USER} being undefined...
+        q{/home/} . $ENV{'USER'} . q{/.reksio.conf}, # FIXME: do not guess, find out what the directory is (who said it always has to reside in /home?)
         q{/etc/reksio.conf},
     );
 

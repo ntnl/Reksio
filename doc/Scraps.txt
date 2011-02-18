@@ -1,25 +1,5 @@
 
- Functionality:
-
-    Dispatch (give tasks to workers)
-    Inspect repository (check if there are new commits)
-    Run build for a commit (and store test results)
-    Compare test results from two commits (and report back)
-
- Utilities:
-
-    Add Repository
-    Drop Repository
-    Add Build
-    Drop Build
-    Schedule a build
-    Display status
-
  Data structures:
-
-    DB:
-
-        (see: data/sql/)
 
     Filesystem:
 
@@ -30,30 +10,6 @@
         builds/$repository_id/$revision_id/build_$build_id/    <-- directory where build/test results lay
         builds/$repository_id/$revision_id/build_$build_id/$result_id-log.txt         <-- diagnostic dump - STDOUT and STDERR, merged
         builds/$repository_id/$revision_id/build_$build_id/$result_id-details.yaml    <-- actual test results, formatted in YAML
-
- Config:
-
- workspace
-    workspace repository
-
- db
-    database - either a sqlite file or (in future) stuff needed for normal DB.
-
- build_results
-    directory where build-result-data is stored
-
- users_file
-    Location of the "Users file"
-
- Config file location:
-
-    $ENV{REKSIO_CONFIG}
-    ./.reksio
-    ./.reksio.conf
-    ~/.reksio
-    ~/.reksio.conf
-    /etc/reksio
-    /etc/reksio.conf
 
  Reporting
 
@@ -67,8 +23,6 @@
     - "Bartłomiej Syguła"
     - natanael
   email: reksio@natanael.krakow.pl
-
-
 
  Dispatching
 
