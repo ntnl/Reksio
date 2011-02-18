@@ -270,7 +270,7 @@ sub _analyze_tap_report { # {{{
             }
         }
 
-        if ($line =~ qr{^([^\s]+)\s\(Wstat: \d+ Tests: (\d+) Failed: (\d+)}s) {
+        if ($line =~ qr{^([^\s]+)\s+\(Wstat: \d+ Tests: (\d+) Failed: (\d+)}s) {
             my ( $test, $t_count, $f_count ) = ( $1, $2, $3 );
 
             $current_test = $report{'tests'}->{$test} = {

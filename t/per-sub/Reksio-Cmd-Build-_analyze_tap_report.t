@@ -72,18 +72,18 @@ Failed 4/8 subtests
 
 Test Summary Report
 -------------------
-all_failed.t (Wstat: 1024 Tests: 4 Failed: 4)
+all_failed.t    (Wstat: 1024 Tests: 4 Failed: 4)
   Failed tests:  1-4
   Non-zero exit status: 4
-died_after.t (Wstat: 65280 Tests: 4 Failed: 0)
+died_after.t    (Wstat: 65280 Tests: 4 Failed: 0)
   Non-zero exit status: 255
-died_before.t (Wstat: 65280 Tests: 0 Failed: 0)
+died_before.t   (Wstat: 65280 Tests: 0 Failed: 0)
   Non-zero exit status: 255
   Parse errors: No plan found in TAP output
-died_trough.t (Wstat: 65280 Tests: 2 Failed: 0)
+died_trough.t   (Wstat: 65280 Tests: 2 Failed: 0)
   Non-zero exit status: 255
   Parse errors: Bad plan.  You planned 4 tests but ran 2.
-some_failed.t (Wstat: 1024 Tests: 8 Failed: 4)
+some_failed.t   (Wstat: 1024 Tests: 8 Failed: 4)
   Failed tests:  2, 4-6
   Non-zero exit status: 4
 Files=6, Tests=22,  0 wallclock secs ( 0.05 usr  0.01 sys +  0.11 cusr  0.02 csys =  0.19 CPU)
@@ -132,6 +132,7 @@ is_deeply(
     }, # }}}
     q{various failures (TAP::Harness v3.22 and Perl v5.12.2)}
 );
+
 
 my $input_2 = # {{{
 q{t/per-module/Reksio-Cmd-DelRepo.t .. ok

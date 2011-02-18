@@ -148,11 +148,14 @@ sub main { # {{{
                 # At this point, revisions, that should be processed, should have the 'S' flag set.
                 # All others should get a 'D' (Done).
                 foreach my $revision (@{ $revisions }) {
-                    update_revision(
-                        id => $revision->{'id'},
+                    if (not $revisions_processed{$revision->{'id'}}) {
+                        # This revision will not be processed by any build, We are done with it.
+                        update_revision(
+                            id => $revision->{'id'},
 
-                        status => 'D',
-                    );
+                            status => 'D',
+                        );
+                    }
                 }
             }
 
