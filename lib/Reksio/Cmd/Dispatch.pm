@@ -38,7 +38,7 @@ sub main { # {{{
 
     my $options = ( Reksio::Cmd::main(\@param_config, \@params) or return 0 );
 
-    print "Dispatch : started\n";
+    _log_out("started");
 
     # Note:
     #   Since at any time a repository or build can be added or changed,
@@ -70,7 +70,7 @@ sub main { # {{{
                 next;
             }
     
-            printf "Dispatch : inspecting repository: '%s'\n", $repo->{'name'};
+            _log_out("inspecting repository: " . $repo->{'name'});
 
             # Inspect the repository.
             run_command(q{Inspect}, q{--repo}, $repo->{'name'});
@@ -170,7 +170,7 @@ sub main { # {{{
             # Run Builds :)
             my $builds_done = 0;
             foreach my $result (_id_sort($results_to_build)) {
-                printf "Dispatch : building '%d'\n", $result->{'id'};
+                _log_out("building: " . $result->{'id'});
 
                 update_result(
                     id => $result->{'id'},
@@ -184,7 +184,7 @@ sub main { # {{{
 
                 $builds_done++;
                 if ($builds_done >= 10) {
-                    printf "Dispatch : switching to other work after 10 reports.\n";
+                    _log_out("switching to other work after 10 builds.");
                     last;
                 }
             }
@@ -199,7 +199,7 @@ sub main { # {{{
             # Run reports :)
             my $reports_done = 0;
             foreach my $result (_id_sort($results_to_report)) {
-                printf "Dispatch : reporting about '%d'\n", $result->{'id'};
+                _log_out("reporting about: " . $result->{'id'});
 
                 update_result(
                     id => $result->{'id'},
@@ -213,24 +213,25 @@ sub main { # {{{
 
                 $reports_done++;
                 if ($reports_done >= 10) {
-                    printf "Dispatch : switching to other work after 10 reports.\n";
+                    _log_out("switching to other work after 10 reports.");
                     last;
                 }
             }
         }
 
         if ($options->{'single'}) {
-            print "Dispatch : single round complete.\n";
+            _log_out("single round complete.");
             last;
         }
 
         if (not $i_did_something) {
-            print "Dispatch : idle run, going to sleep for a while.\n";
+            _log_out("idle run, going to sleep for a while.");
+
             sleep 75; # FIXME: This should be configurable!
         }
     }
 
-    print "Dispatch : ended.\n";
+    _log_out("finished.");
 
     return 0;
 } # }}}
@@ -245,6 +246,24 @@ sub _id_sort { # {{{
     my ( $stuff ) = @_;
 
     return sort { $a->{'id'} <=> $b->{'id'} } @{ $stuff };
+} # }}}
+
+=item _log_out
+
+Purpose: Print diagnostic/informative message, telling what is currently happening.
+
+=cut
+
+sub _log_out { # {{{
+    my ( $msg )= @_;
+
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime;
+
+    my $time_string = sprintf q{%04d-%02d-%02d %02d:%02d:%02d}, $year+1900, $mon+1, $mday, $hour, $min, $sec;
+
+    printf qq{Dispatch : %19s : %s\n}, $time_string, $msg;
+
+    return;
 } # }}}
 
 sub run_command { # {{{

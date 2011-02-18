@@ -70,7 +70,7 @@ stdout_like {
 
 stdout_like {
     $exit_code = Reksio::Cmd::Dispatch::main('--single');
-} qr{Dispatch : ended}, q{Dispatch - was run};
+} qr{Dispatch : \d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d : finished}, q{Dispatch - was run};
 is($exit_code, 0, q{Dispatch - clean exit code});
 
 #  Add more checks here...!
