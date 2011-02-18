@@ -1,4 +1,4 @@
-package Reksio::API::Config;
+package Reksio::API;
 ################################################################################
 # 
 # Reksio - continuous integration and testing server
@@ -12,19 +12,9 @@ package Reksio::API::Config;
 # 
 ################################################################################
 use strict; use warnings; # {{{
-use base 'Exporter';
 
 my $VERSION = '0.1.0';
-
-use Reksio::Core::Config;
-
-use English qw( -no_match_vars );
 # }}}
-
-our @EXPORT_OK = qw(
-    get_config_option
-);
-our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
 =pod
 
@@ -32,42 +22,32 @@ our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
 =head1 NAME
 
-Reksio Configuration API
+Reksio - API reference.
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
- use Reksio::API::Config qw( get_config_option );
+Reksio provides several APIs. Those can be used in third-party scripts/modules,
+that want to inter-operate with Reksio.
 
-=head1 FUNCTIONS
+All APIs are procedural and state-less, unless otherwise explicitly stated.
 
-=over
+=head2 Configuration API
 
-=item get_config_option
+This module provides routines to access Reksio's configuration.
 
-Parameters: B<ARRAY>.
+See: L<Reksio::API::Config>.
 
- $config_option
-   # String.
+=head2 Data API
 
-Returns: B<String>.
+This module provides routines to access and manipulate Reksio's data.
 
-Purpose:
+See: L<Reksio::API::Data>;
 
-Return value of specified config option. If necessarily, will find and load config file.
+=head2 User API
 
-If an option was not set will return undef.
+This module provides routines to access and manipulate User metadata.
 
-Example:
-
- my $workspace_directory = get_config_option('workspace');
-
-=cut
-
-sub get_config_option { # {{{
-    return Reksio::Core::Config::get_config_option(@_);
-} # }}}
-
-=back
+See: L<Reksio::API::User>;
 
 =head1 COPYRIGHT
 

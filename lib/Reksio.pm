@@ -14,7 +14,6 @@ package Reksio;
 use strict; use warnings; # {{{
 
 my $VERSION = '0.1.0';
-
 # }}}
 
 =pod
@@ -38,7 +37,7 @@ Reksio - Continuous Integration and Testing Server
 Reksio aims to monitor predefined list of software repositories (VCS, DVCS as well as tar/zip archives),
 checkout and build new versions as they become available, providing feedback about the build process and it's results.
 
-By doing continous integration and testing it saves developer's time and improves stability and quality.
+By doing continuous integration and testing it saves developer's time and improves stability and quality.
 
 Final goal for the project is to support large - in terms of complexity and people involved - projects,
 both open source and commercial.
@@ -56,7 +55,7 @@ Please download the latest stable release, and run the following:
  ./Build test
  ./Build install
 
-Test step is optional, but recomended. It will ensure, that Reksio works corectly on your system/architecture.
+Test step is optional, but recommended. It will ensure, that Reksio works correctly on your system/architecture.
 If this step fails, please contact the Author.
 
 Currently Reksio is known to work on Linux, will probably run on any *NIX system, and will probably fail on Windows.
@@ -99,7 +98,7 @@ Once the server is configured, you can prepare database for it to use.
 
 Reksio can use virtually any Database supported by Perl trough the DBI library.
 
-It is known to work with SQLite vesion 3.7.0 and above.
+It is known to work with SQLite version 3.7.0 and above.
 
 At this stage, Database has to be initialized using tools provided by the DB.
 SQL structure is provided to ease the task. Please create an empty (with no tables/indexes/etc) database,
@@ -125,7 +124,7 @@ Add builds using the I<reksio_add_build> command.
 
 Each repository may have one, or more builds defined in it.
 
-Builds can not be shared, but more then one repository can have identically configred Build.
+Builds can not be shared, but more then one repository can have identically configured Build.
 
 Note, that Reksio will start watching a reposotory only, if it has builds.
 
@@ -211,19 +210,19 @@ The following documentation is also awailable:
 
 =item Shell commands reference
 
-See L<Reksio::Cmd>
+See L<Reksio::Cmd>.
 
 =item Software repositories support
 
-See: L<Reksio::VCS>
+See: L<Reksio::VCS>.
 
 =item Internal API reference
 
-See L<Reksio::API>
+See L<Reksio::API>.
 
 =item Testing and QA
 
-See L<Reksio::Test>
+See L<Reksio::Test>.
 
 =back
 

@@ -38,7 +38,6 @@ our @EXPORT_OK = qw(
     get_last_revision
     get_revisions
     update_revision
-    delete_revision
 
     schedule_build
 
@@ -46,10 +45,47 @@ our @EXPORT_OK = qw(
     get_results
     get_last_result
     update_result
-    delete_result
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Reksio Configuration API
+
+=head1 SYNOPSIS
+
+ use Reksio::API::Config qw( get_config_option );
+
+=head1 FUNCTIONS
+
+=over
+
+=item add_repository
+
+Parameters: B<HASH>.
+
+ name => String
+    # Repository name.
+    # Name must be unique, server-wide, as it is used to identify the repository.
+
+ vcs  => String
+    # Codename of VCS type.
+    # See Reksio::VCS for list of supported VCS types.
+
+ uri  => String
+    # URL format depends on the VCS used, see Reksio::VCS.
+
+Returns: B<Integer> (Repository ID).
+
+Purpose:
+
+Create Repository entity,
+
+=cut
 
 sub add_repository { # {{{
     my %P = validate(
@@ -70,6 +106,18 @@ sub add_repository { # {{{
         }
     );
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub get_repository { # {{{
     my %P = validate(
@@ -93,6 +141,18 @@ sub get_repository { # {{{
     return $repo;
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub get_repositories { # {{{
     my $sth = Reksio::Core::DB::do_select(
         'reksio_Repository',
@@ -106,6 +166,18 @@ sub get_repositories { # {{{
 
     return \@repos;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 # TODO: What, if repo has builds?
 sub delete_repository { # {{{
@@ -131,6 +203,18 @@ sub delete_repository { # {{{
 
 
 
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub add_build { # {{{
     my %P = validate(
@@ -164,6 +248,18 @@ sub add_build { # {{{
     );
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub get_build { # {{{
     my %P = validate(
         @_,
@@ -186,6 +282,18 @@ sub get_build { # {{{
 
     return $repo;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub get_builds { # {{{
     my %P = validate(
@@ -213,6 +321,18 @@ sub get_builds { # {{{
     return \@builds;
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub delete_build { # {{{
     my %P = validate(
         @_,
@@ -235,6 +355,18 @@ sub delete_build { # {{{
 } # }}}
 
 
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub add_revision { # {{{
     my %P = validate(
@@ -270,6 +402,18 @@ sub add_revision { # {{{
     );
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub get_revision { # {{{
     my %P = validate(
         @_,
@@ -293,6 +437,18 @@ sub get_revision { # {{{
     return $rev;
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub get_last_revision { # {{{
     my %P = validate(
         @_,
@@ -312,6 +468,18 @@ sub get_last_revision { # {{{
 
     return $rev;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub get_revisions { # {{{
     my %P = validate(
@@ -339,6 +507,18 @@ sub get_revisions { # {{{
     }
     return \@revisions;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub update_revision { # {{{
     my %P = validate(
@@ -370,13 +550,21 @@ sub update_revision { # {{{
     );
 } # }}}
 
-# TODO
-#sub delete_revision { # {{{
-#} # }}}
 
 
 
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub schedule_build { # {{{
     my %P = validate(
@@ -409,6 +597,18 @@ sub schedule_build { # {{{
     );
 } # }}}
 
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
+
 sub get_result { # {{{
     my %P = validate(
         @_,
@@ -426,6 +626,18 @@ sub get_result { # {{{
 
     return $result;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 # FIXME: cover this function in automated tests dedicated for this module.
 sub get_last_result { # {{{
@@ -449,6 +661,18 @@ sub get_last_result { # {{{
 
     return $rev;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub get_results { # {{{
     my %P = validate(
@@ -479,6 +703,18 @@ sub get_results { # {{{
 
     return \@results;
 } # }}}
+
+=item ...
+
+Parameters: B<HASH>.
+
+Returns: B<>.
+
+Purpose:
+
+...
+
+=cut
 
 sub update_result { # {{{
     my %P = validate(
@@ -514,10 +750,6 @@ sub update_result { # {{{
 
     return;
 } # }}}
-
-# TODO
-#sub delete_result { # {{{
-#} # }}}
 
 # vim: fdm=marker
 1;

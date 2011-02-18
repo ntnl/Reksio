@@ -28,8 +28,30 @@ our @EXPORT_OK = qw(
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
-# FIXME: This module screens REFACTOR ME! But, since the whole sub-system is a temporal
-# prosthetic, I do not care for at least a month from now...
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Reksio User API
+
+=head1 SYNOPSIS
+
+ use Reksio::API::User qw( get_user_by_name get_user_by_vcs_id );
+
+=head1 FUNCTIONS
+
+=over
+
+=item get_user_by_name
+
+Parameters: B<ARRAY>.
+
+ $name
+    # User name.
+
+=cut
 
 sub get_user_by_name { # {{{
     my ( $name ) = @_;
@@ -48,6 +70,15 @@ sub get_user_by_name { # {{{
 
     return;
 } # }}}
+
+=item get_user_by_vcs_id
+
+Parameters: B<ARRAY>.
+
+ $vcs_id
+    # User VCS ID.
+
+=cut
 
 sub get_user_by_vcs_id { # {{{
     my ( $vcs_id ) = @_;
@@ -72,6 +103,24 @@ sub get_user_by_vcs_id { # {{{
 
     return;
 } # }}}
+
+=back
+
+=head1 FIXME
+
+This module screens REFACTOR ME!
+But, since the whole sub-system is a temporal prosthetic, I do not care for at least a month from now...
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Bartłomiej /Natanael/ Syguła
+
+This is free software.
+It is licensed, and can be distributed under the same terms as Perl itself.
+
+More information on: L<http://reksio-project.org/>
+
+=cut
 
 # vim: fdm=marker
 1;
