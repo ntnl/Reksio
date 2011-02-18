@@ -71,11 +71,11 @@ Parameters: B<HASH>.
  name => String
     # Repository name.
     # Name must be unique, server-wide, as it is used to identify the repository.
-
+ 
  vcs  => String
     # Codename of VCS type.
     # See Reksio::VCS for list of supported VCS types.
-
+ 
  uri  => String
     # URL format depends on the VCS used, see Reksio::VCS.
 
@@ -83,7 +83,7 @@ Returns: B<Integer> (Repository ID).
 
 Purpose:
 
-Create Repository entity,
+Create Repository entity.
 
 =cut
 
@@ -107,15 +107,25 @@ sub add_repository { # {{{
     );
 } # }}}
 
-=item ...
+=item get_repository
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ name => String
+ 
+ id   => Integer
+
+Returns: B<HASHREF>.
 
 Purpose:
 
-...
+Return one Repository entity.
+
+Example:
+
+ my $repository = get_repository( id=>123 );
+ 
+ my $repository = get_repository( name=>'Foo' );
 
 =cut
 
@@ -141,15 +151,15 @@ sub get_repository { # {{{
     return $repo;
 } # }}}
 
-=item ...
+=item get_repositories
 
-Parameters: B<HASH>.
+Parameters: B<none>.
 
-Returns: B<>.
+Returns: B<ARRAYREF>.
 
 Purpose:
 
-...
+Return all Repository entries.
 
 =cut
 
@@ -167,15 +177,21 @@ sub get_repositories { # {{{
     return \@repos;
 } # }}}
 
-=item ...
+=item delete_repository
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ name => String
+ 
+ id   => Integer
+
+Returns: B<undef>.
 
 Purpose:
 
-...
+Delete a Repository entity.
+
+Repository must not have any Builds or Revisions (delete them first).
 
 =cut
 
@@ -204,15 +220,15 @@ sub delete_repository { # {{{
 
 
 
-=item ...
+=item add_build
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+Returns: B<Integer> (Build ID).
 
 Purpose:
 
-...
+Create Build entity in specified Repository.
 
 =cut
 
@@ -248,15 +264,23 @@ sub add_build { # {{{
     );
 } # }}}
 
-=item ...
+=item get_build
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ name          => String
+    # Repository name
+ 
+ repository_id => Integer
+ 
+ id            => Integer
+    # Build ID
+
+Returns: B<HASHREF>.
 
 Purpose:
 
-...
+Return one Build entity.
 
 =cut
 
@@ -283,15 +307,23 @@ sub get_build { # {{{
     return $repo;
 } # }}}
 
-=item ...
+=item get_builds
 
 Parameters: B<HASH>.
+ name          => String | ARRAYREF of Strings
+    # Optional
+ 
+ repository_id => Integer | ARRAYREF of Integers
+    # Optional
+ 
+ id            => Integer | ARRAYREF of Integers
+    # Optional
 
-Returns: B<>.
+Returns: B<ARRAYREF>.
 
 Purpose:
 
-...
+Return list of Builds matching given criteria.
 
 =cut
 
@@ -321,15 +353,23 @@ sub get_builds { # {{{
     return \@builds;
 } # }}}
 
-=item ...
+=item delete_build
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ name          => String
+ 
+ repository_id => Integer
+ 
+ id            => Integer
+
+Returns: B<undef>.
 
 Purpose:
 
-...
+Delete a Build entity.
+
+Build may not have any Results (delete them first).
 
 =cut
 
@@ -356,15 +396,30 @@ sub delete_build { # {{{
 
 
 
-=item ...
+=item add_revision
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ repository_id => { type=>SCALAR },
+ 
+ commit_id        => String
+ 
+ parent_commit_id => String | Undef
+ 
+ timestamp => Integer
+    # Unit timestamp
+ 
+ commiter  => String
+    # VCS User ID
+ 
+ message   => String
+    # Commit message, as returned by VCS
+
+Returns: B<Integer> (Revision ID).
 
 Purpose:
 
-...
+Create Revision entry.
 
 =cut
 
@@ -402,7 +457,7 @@ sub add_revision { # {{{
     );
 } # }}}
 
-=item ...
+=item get_revision
 
 Parameters: B<HASH>.
 
@@ -437,7 +492,7 @@ sub get_revision { # {{{
     return $rev;
 } # }}}
 
-=item ...
+=item get_last_revision
 
 Parameters: B<HASH>.
 
@@ -469,7 +524,7 @@ sub get_last_revision { # {{{
     return $rev;
 } # }}}
 
-=item ...
+=item get_revisions
 
 Parameters: B<HASH>.
 
@@ -508,7 +563,7 @@ sub get_revisions { # {{{
     return \@revisions;
 } # }}}
 
-=item ...
+=item update_revision
 
 Parameters: B<HASH>.
 
@@ -554,7 +609,7 @@ sub update_revision { # {{{
 
 
 
-=item ...
+=item schedule_build
 
 Parameters: B<HASH>.
 
@@ -597,7 +652,7 @@ sub schedule_build { # {{{
     );
 } # }}}
 
-=item ...
+=item get_result
 
 Parameters: B<HASH>.
 
@@ -627,7 +682,7 @@ sub get_result { # {{{
     return $result;
 } # }}}
 
-=item ...
+=item get_last_result
 
 Parameters: B<HASH>.
 
@@ -662,7 +717,7 @@ sub get_last_result { # {{{
     return $rev;
 } # }}}
 
-=item ...
+=item get_results
 
 Parameters: B<HASH>.
 
@@ -704,7 +759,7 @@ sub get_results { # {{{
     return \@results;
 } # }}}
 
-=item ...
+=item update_result
 
 Parameters: B<HASH>.
 

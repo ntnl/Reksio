@@ -86,7 +86,7 @@ Example configuration file is shown bellow.
  workspace:     "/home/reksio/workspace/"
  build_results: "/home/reksio/buildlogs/"
  users_file:    "/home/reksio/users.yaml"
- db:            "sqlite:/home/reksio.sqlite"
+ db:            "sqlite:/home/reksio/reksio.sqlite"
 
 Please note, that the directories have to exist (please create them).
 

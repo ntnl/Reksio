@@ -95,12 +95,12 @@
 [X]     Automated test
 [>] Release beta version
 [>]     Field testing - max 3-5 days
-[>]         Deploy on private server, watch own repository.
+[ ]         Make a package (Module::Build)
+[X]         Deploy on private server, watch own repository.
 [>]         Write missing documentation
 [ ]         Improve test coverage
 [ ]         Debug
 [ ]     Prepare stuff to upload
-[ ]         Make a package (Module::Build)
 [ ]         Make a (spartan) website
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
@@ -120,9 +120,14 @@
 
  Known issues to be resolved
 
+ * Reksio::Core::Config is br0ken, if used outside test environment. Blocker.
+ * Dispatch required --single=0, otherwise dumps help. Blocker.
+ * Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
+ * Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
  * more strict validation of input parameters (at the moment, Reksio trusts the User)
  * some automated tests are based on GIT test repo. Those will not run, if someone has not installed git :(
  * tmp directory should be configurable in settings file
+ * Reksio will start building from first commit. Implement a way to tell him, that "old" revisions should not be touched.
 
  Future ideas
 
