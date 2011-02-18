@@ -120,7 +120,6 @@
 
  Known issues to be resolved
 
- * Reksio::Core::Config is br0ken, if used outside test environment. Blocker.
  * Dispatch required --single=0, otherwise dumps help. Blocker.
  * Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
  * Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.

@@ -52,13 +52,6 @@ sub fake_installation { # {{{
     # FIXME: do not use shell commands.
     system q{cp}, $t_data_dir . q{empty_db.sqlite}, $install_path . q{db/db.sqlite};
 
-    Reksio::Core::Config::set_config_option('workspace',     $install_path . q{workspace/});
-    Reksio::Core::Config::set_config_option('build_results', $install_path . q{builds/});
-
-    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $install_path . q{db/db.sqlite});
-    
-    Reksio::Core::Config::set_config_option('configured', 1);
-
     DumpFile(
         $install_path . q{users.yaml},
         {
@@ -77,7 +70,8 @@ sub fake_installation { # {{{
             },
         }
     );
-    Reksio::Core::Config::set_config_option('users_file',    $install_path . q{users.yaml});
+
+    _write_fake_config($install_path);
 
     return $install_path;
 } # }}}
@@ -104,13 +98,6 @@ sub fake_installation_with_data { # {{{
     mkdir $install_path;
     system q{cd }. $install_path .q{ && tar xzf } . $t_data . q{/test_install.tgz};
 
-    Reksio::Core::Config::set_config_option('workspace',     $install_path . q{workspace/});
-    Reksio::Core::Config::set_config_option('build_results', $install_path . q{builds/});
-
-    Reksio::Core::Config::set_config_option('db', q{sqlite:}. $install_path . q{db/db.sqlite});
-    
-    Reksio::Core::Config::set_config_option('configured', 1);
-
     DumpFile(
         $install_path . q{users.yaml},
         {
@@ -129,9 +116,31 @@ sub fake_installation_with_data { # {{{
             },
         }
     );
-    Reksio::Core::Config::set_config_option('users_file',    $install_path . q{users.yaml});
+
+    _write_fake_config($install_path);
 
     return $install_path;
+} # }}}
+
+sub _write_fake_config { # {{{
+    my ( $install_path ) = @_;
+
+    my %config = (
+        'workspace'     => $install_path . q{workspace/},
+        'build_results' => $install_path . q{builds/},
+
+        'db' => q{sqlite:}. $install_path . q{db/db.sqlite},
+    
+        'users_file', $install_path . q{users.yaml},
+    );
+
+    my $conf_path = $install_path . q{test.conf};
+
+    DumpFile($conf_path, \%config);
+    
+    $ENV{'REKSIO_CONFIG'} = $conf_path;
+
+    return;
 } # }}}
 
 END {

@@ -52,7 +52,7 @@ stdout_like {
 
 
 
-my $report_file;
+my ($report_file, $fake_email);
 
 # ---
 
@@ -61,7 +61,7 @@ stdout_like {
 } qr{Report .+? complete}s, q{Report - first - clean exit};
 is($exit_code, 0, q{Report - first - exit code});
 
-my $fake_email = Reksio::Test::Email::get_debug_stack()->[0];
+$fake_email = Reksio::Test::Email::get_debug_stack()->[0];
 like($fake_email->{'Data'}, qr{This commit passed all tests.}, q{Report - first - email});
 
 $report_file = read_file($basedir . q{/builds/1/1/build_1/1-report.txt});
@@ -74,7 +74,7 @@ stdout_like {
 } qr{Report .+? complete}s, q{Report - passed - clean exit};
 is($exit_code, 0, q{Report - passed - exit code});
 
-my $fake_email = Reksio::Test::Email::get_debug_stack()->[0];
+$fake_email = Reksio::Test::Email::get_debug_stack()->[0];
 like($fake_email->{'Data'}, qr{This commit passed all tests.}, q{Report - first - email});
 
 $report_file = read_file($basedir . q{/builds/1/2/build_1/2-report.txt});
@@ -87,7 +87,7 @@ stdout_like {
 } qr{Report .+? complete}s, q{Report - failure - clean exit};
 is($exit_code, 0, q{Report - failure - exit code});
 
-my $fake_email = Reksio::Test::Email::get_debug_stack()->[0];
+$fake_email = Reksio::Test::Email::get_debug_stack()->[0];
 like($fake_email->{'Data'}, qr{Tests broken by this commit}, q{Report - failure - email});
 
 $report_file = read_file($basedir . q{/builds/1/3/build_1/3-report.txt});
@@ -100,7 +100,7 @@ stdout_like {
 } qr{Report .+? complete}s, q{Report - still broken - clean exit};
 is($exit_code, 0, q{Report - still broken - exit code});
 
-my $fake_email = Reksio::Test::Email::get_debug_stack()->[0];
+$fake_email = Reksio::Test::Email::get_debug_stack()->[0];
 like($fake_email->{'Data'}, qr{Tests still broken}, q{Report - still broken - email});
 
 $report_file = read_file($basedir . q{/builds/1/4/build_1/4-report.txt});
@@ -113,7 +113,7 @@ stdout_like {
 } qr{Report .+? complete}s, q{Report - fix - clean exit};
 is($exit_code, 0, q{Report - fix - exit code});
 
-my $fake_email = Reksio::Test::Email::get_debug_stack()->[0];
+$fake_email = Reksio::Test::Email::get_debug_stack()->[0];
 like($fake_email->{'Data'}, qr{Tests fixed by this commit}, q{Report - fix - email});
 
 $report_file = read_file($basedir . q{/builds/1/5/build_1/5-report.txt});

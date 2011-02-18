@@ -39,7 +39,7 @@ sub _find_config { # {{{
 
     my $config_path;
     foreach my $path (@choices) {
-        if (-f $path) {
+        if ($path and -f $path) {
             $config_path = $path;
 
             last;
@@ -57,10 +57,10 @@ sub configure { # {{{
     my $config_file_path = _find_config();
 
     assert_defined($config_file_path, "Config file was found."); # FIXME: handle in more User-friendly name.
+    
+    %configuration = %{ LoadFile($config_file_path) };
 
-    my $config_src = LoadFile($config_file_path);
-
-    assert_defined($config_src->{'workspace'}, 'workspace is defined');
+    assert_defined($configuration{'workspace'}, 'workspace is defined');
 
     # Note:
     #   Options 'build_results' and 'db' are mandatory for server.
@@ -75,6 +75,8 @@ sub get_config_option { # {{{
     my ( $name ) = @_;
 
     assert_defined($name);
+
+    configure();
 
     return $configuration{$name};
 } # }}}

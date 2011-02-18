@@ -36,14 +36,12 @@ use Reksio::API::Data qw(
     get_last_revision
     get_revisions
     update_revision
-    delete_revision
 
     schedule_build
 
     get_result
     get_results
     update_result
-    delete_result
 );
 
 plan tests =>

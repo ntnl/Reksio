@@ -16,7 +16,7 @@ use strict; use warnings; # {{{
 my $VERSION = '0.1.0';
 
 use Reksio::API::Config qw( get_config_option );
-use Reksio::API::Data qw( get_repositories get_revisions get_builds get_results schedule_build update_result );
+use Reksio::API::Data qw( get_repositories get_builds get_revisions update_revision get_results schedule_build update_result );
 use Reksio::Cmd;
 
 use Carp::Assert::More qw( assert_defined );
@@ -95,6 +95,12 @@ sub main { # {{{
                                 build_id    => $build->{'id'},
                             );
 
+                            update_revision(
+                                id => $revision->{'id'},
+
+                                status => 'S',
+                            );
+
                             $revisions_processed{$revision->{'id'}} = 1;
                         }
 
@@ -138,17 +144,15 @@ sub main { # {{{
                     # meaning "do not run this build at all".
                     # This is implementing simply by ignoring such build...
                 }
-            
+
                 # At this point, revisions, that should be processed, should have the 'S' flag set.
                 # All others should get a 'D' (Done).
                 foreach my $revision (@{ $revisions }) {
-                    if (not $revisions_processed{$revision->{'id'}}) {
-                        update_revision(
-                            id => $revision->{'id'},
+                    update_revision(
+                        id => $revision->{'id'},
 
-                            status => 'D',
-                        );
-                    }
+                        status => 'D',
+                    );
                 }
             }
 
