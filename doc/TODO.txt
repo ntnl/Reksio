@@ -102,12 +102,11 @@
 [X]             Commands documentation
 [X]             Test framework documentation
 [ ]         Improve test coverage
-[>]         Debug
+[X]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
 [X]             Add timestamp/date to Dispatch log-like output
-[ ]             Dispatch required --single=0, otherwise dumps help. Blocker.
-[ ]             Fix spelling: fake_installation, instead of: fake_instalation
+[X]             Dispatch requires --single=0, otherwise dumps help. Blocker.
 [ ]     Prepare stuff to upload
 [ ]         Make a (spartan) website
 [ ]         Make a package (Module::Build)

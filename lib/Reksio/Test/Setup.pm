@@ -51,7 +51,7 @@ For best test performance, mount F</tmp> as I<tmpfs> (ramdisk).
 
 =over
 
-=item fake_instalation
+=item fake_installation
 
 Parameters: B<String> (t_data directory location).
 

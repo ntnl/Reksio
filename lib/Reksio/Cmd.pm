@@ -97,7 +97,18 @@ All Reksio commands should be based on this module/function for consistency.
 sub main { # {{{
     my ($param_config, $argv_params) = @_;
 
-    if (scalar @{ $param_config } and not scalar @{ $argv_params }) {
+    # By default, running with no parameters is allowed.
+    # This is not true, if there is at least one required parameter.
+    # In such situation, command should display help (instead is ranting about some missing parameters).
+    my $require_parameters = 0;
+    foreach my $param_def (@{ $param_config }) {
+        if ($param_def->{'required'}) {
+            $require_parameters = 1;
+            last;
+        }
+    }
+
+    if ($require_parameters and not scalar @{ $argv_params }) {
         $argv_params = [ '--help' ];
     }
 
