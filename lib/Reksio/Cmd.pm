@@ -19,6 +19,81 @@ use English qw( -no_match_vars );
 use Getopt::Long 2.36 qw( GetOptionsFromArray );
 # }}}
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Reksio::Cmd - Reksio Command Line Interface
+
+=head1 COMMANDS
+
+Reksio provides a set of shell commands, that allow the server to be managed trough terminal (SSH) connection.
+
+=head2 Repository management
+
+=over
+
+=item reksio_add_repository
+
+=item reksio_drop_repository
+
+=back
+
+=head2 Build management
+
+=over
+
+=item reksio_add_build
+
+=item reksio_drop_build
+
+=item reksio_schedule_build
+
+=back
+
+=head2 Main scripts
+
+=over
+
+=item reksio_dispatch
+
+=item reksio_inspect
+
+=item reksio_build
+
+=item reksio_report
+
+=back
+
+=head1 FUNCTIONS
+
+=over
+
+=item main
+
+Parameters: B<ARRAY>.
+
+Returns: B<Integer> (exit code).
+
+Purpose:
+
+Bootstrap Reksio command line interface scripts.
+
+Usage:
+
+ use Reksio::Cmd;
+ 
+ exit Reksio::Cmd::main(@ARGV);
+
+This function implements consistent command-line parameter parsing, support for I<--help> and I<--version>,
+as well as some other details.
+
+All Reksio commands should be based on this module/function for consistency.
+
+=cut
+
 sub main { # {{{
     my ($param_config, $argv_params) = @_;
 
@@ -85,6 +160,19 @@ sub main { # {{{
 
     return \%options;
 } # }}}
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Bartłomiej /Natanael/ Syguła
+
+This is free software.
+It is licensed, and can be distributed under the same terms as Perl itself.
+
+More information on: L<http://reksio-project.org/>
+
+=cut
 
 # vim: fdm=marker
 1;

@@ -99,8 +99,8 @@
 [>]         Write missing documentation
 [X]             API Documentation
 [X]             VCS Documentation
+[X]             Commands documentation
 [ ]             Test framework documentation
-[ ]             Commands documentation
 [ ]         Improve test coverage
 [>]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
