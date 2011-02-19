@@ -93,22 +93,22 @@
 [X]         Harvest not-reported builds and schedule reports
 [X]         Execute the report command
 [X]     Automated test
-[>] Release beta version
-[>]     Field testing - max 3-5 days
+[X] Release beta version
+[X]     Field testing - max 3-5 days
 [X]         Deploy on private server, watch own repository.
 [X]         Write missing documentation
 [X]             API Documentation
 [X]             VCS Documentation
 [X]             Commands documentation
 [X]             Test framework documentation
-[>]         Improve test coverage
+[X]         Improve test coverage
 [X]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
 [X]             Add timestamp/date to Dispatch log-like output
 [X]             Dispatch requires --single=0, otherwise dumps help. Blocker.
-[ ]     Prepare stuff to upload
-[ ]         Make a (spartan) website
+[>]     Prepare stuff to upload
+[>]         Make a (spartan) website
 [ ]         Make a package (Module::Build)
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
