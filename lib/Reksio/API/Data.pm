@@ -58,9 +58,11 @@ Reksio Configuration API
 
 =head1 SYNOPSIS
 
- use Reksio::API::Config qw( get_config_option );
+ use Reksio::API::Data;
 
 =head1 FUNCTIONS
+
+All functions are exportable, none is exported by default.
 
 =over
 
@@ -882,6 +884,19 @@ sub update_result { # {{{
 
     return;
 } # }}}
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Bartłomiej /Natanael/ Syguła
+
+This is free software.
+It is licensed, and can be distributed under the same terms as Perl itself.
+
+More information on: L<http://reksio-project.org/>
+
+=cut
 
 # vim: fdm=marker
 1;

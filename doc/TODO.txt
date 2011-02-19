@@ -98,7 +98,7 @@
 [X]         Deploy on private server, watch own repository.
 [>]         Write missing documentation
 [X]             API Documentation
-[ ]             VCS Documentation
+[X]             VCS Documentation
 [ ]             Test framework documentation
 [ ]             Commands documentation
 [ ]         Improve test coverage
