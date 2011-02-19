@@ -101,7 +101,7 @@
 [X]             VCS Documentation
 [X]             Commands documentation
 [X]             Test framework documentation
-[ ]         Improve test coverage
+[>]         Improve test coverage
 [X]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
@@ -135,6 +135,7 @@
 
  Future ideas
 
+ * Implement and deploy an utility routine, that ensures a directory exists, and is empty (removes/creates it if it has to)
  * Command line utility to list repositories.
  * Command line utility to display server status (overall + detailed).
  * Define build stages: configuration, build, test - each having separate command and status.

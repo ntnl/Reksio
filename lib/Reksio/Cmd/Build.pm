@@ -80,11 +80,8 @@ sub main { # {{{
 
     my $sandbox_location = sprintf q{%s/%s_%d}, $workspace, md5_hex($repo->{'uri'}), $PID;
 
-    if (-d $sandbox_location) {
-        # FIXME: ugly hack!
-        system q{rm}, q{-rf}, $sandbox_location;
-    }
-
+    # FIXME: ugly hack!
+    system q{rm}, q{-rf}, $sandbox_location;
     mkdir $sandbox_location;
 
     $vcs_handler->checkout($sandbox_location, $revision->{'commit_id'});
@@ -96,21 +93,11 @@ sub main { # {{{
     # Tests configured?
     if ($build->{'test_command'}) {
         my $pipe;
-        if (not open $pipe, q{-|}, q{cd } . $sandbox_location .q{ && } . $build->{'test_command'} . q{ 2>&1}) {
-            # FIXME: cover this use-case in automated tests!
-            print STDERR q{Error: Test command failed.};
 
-            # FIXME: emit some debug information.
+        # FIXME: Encode what is being run!
+        my $open_status = open $pipe, q{-|}, q{cd } . $sandbox_location .q{ && } . $build->{'test_command'} . q{ 2>&1};
 
-            update_result(
-                id => $result->{'id'},
-
-                build_status => q{E}, # E = Internal Error
-                build_stage  => q{D},
-            );
-
-            return 2;
-        }
+        assert_defined($open_status, q{Open OK});
 
         $output .= read_file($pipe);
         my $close_status = close $pipe;

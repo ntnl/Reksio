@@ -28,7 +28,7 @@ use Reksio::Cmd::Build;
 plan tests =>
     + 1 # check --help
     + 1 # check --version
-    + 5 # build
+    + 5 # build (typical)
     + 2 # non-existing result
 ;
 
@@ -46,6 +46,7 @@ my $b1_id = add_build(
     frequency        => 'EACH',
     test_result_type => 'TAP'
 );
+
 my $rev1_id = add_revision(
     repository_id => $rep1_id,
 
@@ -115,6 +116,8 @@ is_deeply(
     },
     q{Build - result updated}
 );
+
+# ---
 
 stderr_like {
     $exit_code = Reksio::Cmd::Build::main('--result_id=123');

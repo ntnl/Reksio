@@ -107,38 +107,38 @@ sub main { # {{{
                         next;
                     }
 
-                    if ($build->{'frequency'} eq 'RECENT') {
-                        # Build just the most recent revision.
+#                    if ($build->{'frequency'} eq 'RECENT') {
+#                        # Build just the most recent revision.
+#
+#                        die("Not implemented yet!"); # FIXME: Implement!
+#                        # Note to self:
+#                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+#                        #   but with n-m commit instead.
+#
+#                        next;
+#                    }
 
-                        die("Not implemented yet!"); # FIXME: Implement!
-                        # Note to self:
-                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
-                        #   but with n-m commit instead.
+#                    if ($build->{'frequency'} eq 'HOURLY') {
+#                        # Build most recent revision, only if there was at least an hour since last build.
+#
+#                        die("Not implemented yet!"); # FIXME: Implement!
+#                        # Note to self:
+#                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+#                        #   but with n-m commit instead.
+#
+#                        next;
+#                    }
 
-                        next;
-                    }
-
-                    if ($build->{'frequency'} eq 'HOURLY') {
-                        # Build most recent revision, only if there was at least an hour since last build.
-
-                        die("Not implemented yet!"); # FIXME: Implement!
-                        # Note to self:
-                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
-                        #   but with n-m commit instead.
-
-                        next;
-                    }
-
-                    if ($build->{'frequency'} eq 'DAILY') {
-                        # Build most recent revision, but only once per day.
-
-                        die("Not implemented yet!"); # FIXME: Implement!
-                        # Note to self:
-                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
-                        #   but with n-m commit instead.
-
-                        next;
-                    }
+#                    if ($build->{'frequency'} eq 'DAILY') {
+#                        # Build most recent revision, but only once per day.
+#
+#                        die("Not implemented yet!"); # FIXME: Implement!
+#                        # Note to self:
+#                        #   It is simple to implement the Build part, but Reporting has to know that it has to compare not with n-1 commit,
+#                        #   but with n-m commit instead.
+#
+#                        next;
+#                    }
 
                     # There can be a 'PAUSED' frequency too,
                     # meaning "do not run this build at all".
