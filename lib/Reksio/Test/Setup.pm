@@ -30,9 +30,32 @@ our @EXPORT_OK = qw(
 );
 our %EXPORT_TAGS = ('all' => [ @EXPORT_OK ]);
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Reksio::Test::Setup - Reksio test environment setup.
+
 =head1 PURPOSE
 
-Set up (fake) environment for automated tests.
+Set up (mock) different (fake) environments for use in automated tests.
+
+=head1 DESCRIPTION
+
+Installation directories are put in F</tmp> directory.
+For best test performance, mount F</tmp> as I<tmpfs> (ramdisk).
+
+=head1 FUNCTIONS
+
+=over
+
+=item fake_instalation
+
+Parameters: B<String> (t_data directory location).
+
+Returns: B<String> (path to created installation).
 
 =cut
 
@@ -76,6 +99,18 @@ sub fake_installation { # {{{
     return $install_path;
 } # }}}
 
+=item fake_repository
+
+Parameters: B<String> (t_data directory location).
+
+Returns: B<String> (path to created repository).
+
+Purpose:
+
+Create a fake repository, that can be used in automated tests.
+
+=cut
+
 my $repo_path;
 
 # Prepare the source test repository.
@@ -89,6 +124,18 @@ sub fake_repository { # {{{
 
     return $repo_path . q{test_repo/};
 } # }}}
+
+=item fake_installation_with_data
+
+Parameters: B<String> (t_data directory location).
+
+Returns: B<String> (path to created installation).
+
+Purpose:
+
+Create a fake installation, which already contains some test data.
+
+=cut
 
 sub fake_installation_with_data { # {{{
     my ( $t_data ) = @_;

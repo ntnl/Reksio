@@ -96,17 +96,18 @@
 [>] Release beta version
 [>]     Field testing - max 3-5 days
 [X]         Deploy on private server, watch own repository.
-[>]         Write missing documentation
+[X]         Write missing documentation
 [X]             API Documentation
 [X]             VCS Documentation
 [X]             Commands documentation
-[ ]             Test framework documentation
+[X]             Test framework documentation
 [ ]         Improve test coverage
 [>]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
 [X]             Add timestamp/date to Dispatch log-like output
 [ ]             Dispatch required --single=0, otherwise dumps help. Blocker.
+[ ]             Fix spelling: fake_installation, instead of: fake_instalation
 [ ]     Prepare stuff to upload
 [ ]         Make a (spartan) website
 [ ]         Make a package (Module::Build)
