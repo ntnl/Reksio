@@ -115,7 +115,7 @@ Parameters: B<HASH>.
  
  id   => Integer
 
-Returns: B<HASHREF>.
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
@@ -185,7 +185,7 @@ Parameters: B<HASH>.
  
  id   => Integer
 
-Returns: B<undef>.
+Returns: B<Undef>.
 
 Purpose:
 
@@ -195,7 +195,7 @@ Repository must not have any Builds or Revisions (delete them first).
 
 =cut
 
-# TODO: What, if repo has builds?
+# FIXME: What, if repo has builds?
 sub delete_repository { # {{{
     my %P = validate(
         @_,
@@ -268,15 +268,15 @@ sub add_build { # {{{
 
 Parameters: B<HASH>.
 
- name          => String
+ id => Integer
+    # Build ID
+
+ name => String
     # Repository name
  
  repository_id => Integer
- 
- id            => Integer
-    # Build ID
 
-Returns: B<HASHREF>.
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
@@ -310,13 +310,14 @@ sub get_build { # {{{
 =item get_builds
 
 Parameters: B<HASH>.
- name          => String | ARRAYREF of Strings
+
+ id => Integer | ARRAYREF of Integers
+    # Optional
+
+ name => String | ARRAYREF of Strings
     # Optional
  
  repository_id => Integer | ARRAYREF of Integers
-    # Optional
- 
- id            => Integer | ARRAYREF of Integers
     # Optional
 
 Returns: B<ARRAYREF>.
@@ -357,13 +358,15 @@ sub get_builds { # {{{
 
 Parameters: B<HASH>.
 
- name          => String
+ id => Integer
+    # Build ID
+
+ name => String
+    # Build name
  
  repository_id => Integer
  
- id            => Integer
-
-Returns: B<undef>.
+Returns: B<Undef>.
 
 Purpose:
 
@@ -409,10 +412,10 @@ Parameters: B<HASH>.
  timestamp => Integer
     # Unit timestamp
  
- commiter  => String
+ commiter => String
     # VCS User ID
  
- message   => String
+ message => String
     # Commit message, as returned by VCS
 
 Returns: B<Integer> (Revision ID).
@@ -461,11 +464,18 @@ sub add_revision { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer
+    # Revision ID
+ 
+ repository_id => Integer
+ 
+ commit_id => String
+
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
-...
+Return one Revision entity.
 
 =cut
 
@@ -496,11 +506,13 @@ sub get_revision { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ repository_id => Integer
+
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
-...
+Return most recent Revision from specified Repository.
 
 =cut
 
@@ -528,11 +540,23 @@ sub get_last_revision { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer | ARRAYREF of Integers,
+    # Revision ID
+ 
+ repository_id => Integer | ARRAYREF of Integers,
+ 
+ commit_id => String | ARRAYREF of Strings
+ 
+ status => Char | ARRAYREF or Chars
+ 
+ commiter => String | ARRAYREF of Strings
+    # VCS User ID
+
+Returns: B<ARRAYREF>.
 
 Purpose:
 
-...
+Return list of Revisions matching given criteria.
 
 =cut
 
@@ -567,11 +591,25 @@ sub get_revisions { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer
+    # Revision ID
+    # This is the ID of Revision to update.
+    # Other are values to set, and are optional (at least one has to be given).
+
+ commit_id        => String
+ parent_commit_id => String | Undef
+
+ timestamp => Unit timestamp (Integer)
+ commiter  => String
+ message   => String
+ 
+ status => { type=>SCALAR, optional=>1 },
+
+Returns: B<Undef>.
 
 Purpose:
 
-...
+Change one or more properties of Revision entity.
 
 =cut
 
@@ -613,11 +651,14 @@ sub update_revision { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ revision_id => Integer
+ build_id    => Integer
+
+Returns: B<Integer> (Result ID).
 
 Purpose:
 
-...
+Creates a new Result entity, that is scheduled for processing by Build function.
 
 =cut
 
@@ -656,11 +697,14 @@ sub schedule_build { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer
+    # Result ID
+
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
-...
+Return one Result entity.
 
 =cut
 
@@ -686,11 +730,18 @@ sub get_result { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ build_id    => Integer
+ revision_id => Integer
+
+Returns: B<HASHREF | Undef>.
 
 Purpose:
 
-...
+Return most recent Build Result entity of given Revision.
+
+Returns Undef, if no results of Build in given Revision exist.
+
+Note, that this function can return Results that are scheduled, processed or complete Results.
 
 =cut
 
@@ -721,11 +772,21 @@ sub get_last_result { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer
+    # Result ID.
+
+ revision_id => Integer
+ build_id    => Integer
+
+ build_status  => Char
+ build_stage   => Char
+ report_status => Char
+
+Returns: B<ARRAYREF>.
 
 Purpose:
 
-...
+Return list of Results matching given criteria.
 
 =cut
 
@@ -763,11 +824,27 @@ sub get_results { # {{{
 
 Parameters: B<HASH>.
 
-Returns: B<>.
+ id => Integer
+    # This is the ID of Result to update.
+    # Other are values to set, and are optional (at least one has to be given).
+ 
+ build_status  => Char
+ build_stage   => Char
+ report_status => Char
+ 
+ date_start  => (reserved)
+ date_finish => (reserver)
+ 
+ total_tests_count  => Integer
+ total_cases_count  => Integer
+ failed_tests_count => Integer
+ failed_cases_count => Integer
+
+Returns: B<Undef>.
 
 Purpose:
 
-...
+Change one or more properties of Result entity.
 
 =cut
 

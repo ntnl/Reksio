@@ -97,6 +97,10 @@
 [>]     Field testing - max 3-5 days
 [X]         Deploy on private server, watch own repository.
 [>]         Write missing documentation
+[X]             API Documentation
+[ ]             VCS Documentation
+[ ]             Test framework documentation
+[ ]             Commands documentation
 [ ]         Improve test coverage
 [>]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
