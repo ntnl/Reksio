@@ -102,14 +102,15 @@
 [X]             Commands documentation
 [X]             Test framework documentation
 [X]         Improve test coverage
-[X]         Debug
+[>]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
 [X]             Add timestamp/date to Dispatch log-like output
 [X]             Dispatch requires --single=0, otherwise dumps help. Blocker.
+[ ]             Even if a build fixes some tests, report is still titled 'Failed'
 [>]     Prepare stuff to upload
-[>]         Make a (spartan) website
-[ ]         Make a package (Module::Build)
+[X]         Make a (spartan) website
+[>]         Make a package (Module::Build)
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
 [ ]         Generate source code dump
