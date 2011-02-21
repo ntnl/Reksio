@@ -1,4 +1,12 @@
 .*.swp
 .*.swo
 cover_db
+Build
+META.yml
+MYMETA.yml
+Reksio-v*.tar.gz
+_build/
+blib/
+pod2htmd.tmp
+pod2htmi.tmp
 

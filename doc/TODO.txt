@@ -110,7 +110,7 @@
 [ ]             Even if a build fixes some tests, report is still titled 'Failed'
 [>]     Prepare stuff to upload
 [X]         Make a (spartan) website
-[>]         Make a package (Module::Build)
+[X]         Make a package (Module::Build)
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
 [ ]         Generate source code dump
