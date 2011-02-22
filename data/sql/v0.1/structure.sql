@@ -29,10 +29,12 @@ CREATE TABLE reksio_Build (
         -- HOURLY - run not often, then once per hour (on recent commit, unless already build)
         -- DAILY - run once per day (on most recent commit, unless already build)
 
-    test_result_type VARCHAR(32)
+    test_result_type VARCHAR(32),
         -- NONE - ignore the result (build always positive).
         -- EXITCODE - buld was successful if command's exit code was zero.
         -- TAP - parse output as TAP, and judge results by that.
+
+    FOREIGN KEY (`repository_id`) REFERENCES reksio_Repository (`id`)
 );
 CREATE UNIQUE INDEX reksio_Build_name ON reksio_Build (name, repository_id);
 
@@ -48,10 +50,13 @@ CREATE TABLE reksio_Revision (
 
     message TEXT,
 
-    status CHAR(1)
+    status CHAR(1),
         -- N - new (not touched)
         -- S - scheduled all mandatory builds for this revision have been scheduled
         -- D - done all scheduled builds complete (or none needed)
+
+    FOREIGN KEY (`repository_id`) REFERENCES reksio_Repository (`id`),
+    FOREIGN KEY (`parent_commit_id`) REFERENCES reksio_Revision (`commit_id`)
 );
 CREATE UNIQUE INDEX reksio_Revision_commit_id ON reksio_Revision (repository_id, commit_id);
 
@@ -91,6 +96,9 @@ CREATE TABLE reksio_Result (
     total_tests_count  INTEGER,
     total_cases_count  INTEGER,
     failed_tests_count INTEGER,
-    failed_cases_count INTEGER
+    failed_cases_count INTEGER,
+
+    FOREIGN KEY (`revision_id`) REFERENCES reksio_Revision (`id`),
+    FOREIGN KEY (`build_id`) REFERENCES reksio_Build (`id`)
 );
 
