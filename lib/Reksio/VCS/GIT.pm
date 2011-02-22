@@ -29,10 +29,10 @@ sub vcs_revisions { # {{{
 
     my @logs;
     if ($start_at) {
-        @logs = $repo->log( $start_at . q{..HEAD}, q{-n}, q{100} );
+        @logs = $repo->log( $start_at . q{..HEAD} );
     }
     else {
-        @logs = $repo->log( q{-n}, q{100} );
+        @logs = $repo->log( );
     }
 
     my @revisions;

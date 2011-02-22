@@ -61,3 +61,12 @@
                 - no reports are running for the repo
                 - there are unreported Results
 
+BUG!
+
+The 'revision_id' parameter (undef) to Reksio::API::Data::get_last_result was an 'undef', which is not one of the allowed types: scalar
+ at /home/reksio/Reksio/scripts/../lib//Reksio/API/Data.pm line 699
+	Reksio::API::Data::get_last_result('build_id', 2, 'revision_id', undef) called at /home/reksio/Reksio/scripts/../lib//Reksio/Cmd/Report.pm line 86
+	Reksio::Cmd::Report::main('--result_id', 54) called at /home/reksio/Reksio/scripts/../lib//Reksio/Cmd/Dispatch.pm line 263
+	Reksio::Cmd::Dispatch::run_command('Report', '--result_id', 54) called at /home/reksio/Reksio/scripts/../lib//Reksio/Cmd/Dispatch.pm line 210
+	Reksio::Cmd::Dispatch::main('--single=0') called at /home/reksio/Reksio/scripts//reksio_dispatch line 23
+

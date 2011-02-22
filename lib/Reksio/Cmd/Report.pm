@@ -83,6 +83,8 @@ sub main { # {{{
             commit_id     => $revision_B->{'parent_commit_id'},
         );
 
+        # What, if We find no revision? Such thing should not happen, right?
+
         $result_A = get_last_result(
             build_id    => $build->{'id'},
             revision_id => $revision_A->{'id'},
@@ -133,7 +135,7 @@ sub _separator { # {{{
     my ( $title ) = @_;
 
     my $string = qq{\n ---= } . $title . q{ =};
-    $string .= q{-} x ( 64 - length $title);
+    $string .= q{-} x ( 48 - length $title);
     $string .= qq{ - - -\n\n};
 
     return $string;
@@ -165,7 +167,7 @@ sub _format_test_file_line { # {{{
 sub _compare_revisions { # {{{
     my ($repo, $build, $revision_A, $details_A, $revision_B, $details_B) = @_;
 
-    my $report_text = _rep_describe_revision($revision_B);
+    my $report_text = _rep_describe_revision($repo, $build, $revision_B);
     my $report_title;
 
     if (not scalar keys %{ $details_A->{'tests'} } and not scalar keys %{ $details_B->{'tests'} }) {
@@ -173,7 +175,7 @@ sub _compare_revisions { # {{{
 
         $report_text .= "This commit passed all tests.";
 
-        $report_title = _title('Pass', $revision_B);
+        $report_title = _title('Pass', $repo, $build, $revision_B);
     }
     else {
         my %test_pool = (
@@ -208,12 +210,14 @@ sub _compare_revisions { # {{{
         }
 
         foreach my $section (qw( Fixed Broken Failing )) {
-            if (not scalar keys %{ $test_pool{$section}->{'tests'} }) {
+            my $count = scalar keys %{ $test_pool{$section}->{'tests'} };
+
+            if (not $count) {
                 # This section is empty. Skip it.
                 next;
             }
 
-            $report_text .= _separator($test_pool{$section}->{'label'});
+            $report_text .= _separator($test_pool{$section}->{'label'} . q{ (}. $count .q{)});
 
             foreach my $test (keys %{ $test_pool{$section}->{'tests'} }) {
                 $report_text .= _format_test_file_line(
@@ -224,7 +228,21 @@ sub _compare_revisions { # {{{
             }
         }
 
-        $report_title = _title('Fail', $revision_B); # FIXME: Distinguish between Fixed, Broken, Fail.
+        my $title_status = q{Fail}; # Pessimistic by default ;)
+
+        if (scalar keys %{ $test_pool{'Broken'}->{'tests'} }) {
+            $title_status = q{FMore};
+        }
+        elsif (scalar keys %{ $test_pool{'Fixed'}->{'tests'} }) {
+            if (scalar keys %{ $test_pool{'Failing'}->{'tests'} }) {
+                $title_status = q{Fix};
+            }
+            else {
+                $title_status = q{FLess};
+            }
+        }
+
+        $report_title = _title($title_status, $repo, $build, $revision_B);
     }
 
     return ( $report_text, $report_title );
@@ -233,7 +251,7 @@ sub _compare_revisions { # {{{
 sub _describe_revision { # {{{
     my ($repo, $build, $revision, $details) = @_;
 
-    my $report_text = _rep_describe_revision($revision);
+    my $report_text = _rep_describe_revision($repo, $build, $revision);
     my $report_title;
 
     if (not scalar keys %{ $details->{'tests'} }) {
@@ -241,7 +259,7 @@ sub _describe_revision { # {{{
 
         $report_text .= "This commit passed all tests.";
 
-        $report_title = _title('Pass', $revision);
+        $report_title = _title('Pass', $repo, $build, $revision);
     }
     else {
         $report_text .= _separator('Tests broken by this commit');
@@ -261,25 +279,39 @@ sub _describe_revision { # {{{
 } # }}}
 
 sub _title { # {{{
-    my ( $status, $revision ) = @_;
+    my ( $status, $repository, $build, $revision ) = @_;
+    
+    assert_defined($repository);
+    assert_defined($build);
+    assert_defined($revision);
 
     my %text = (
-        'Fail' => q{Failed (revision: }. $revision->{'commit_id'} .q{)},
-        'Pass' => q{Passed (revision: }. $revision->{'commit_id'} .q{)},
+        # Bad scenarios:
+        'Fail'  => q{still failing},
+        'FLess' => q{failed less},
+        'FMore' => q{failed more},
+
+        # Good scenarios:
+        'Fix'  => q{fixed},
+        'Pass' => q{passed cleanly},
     );
 
-    return $text{$status};
+    return $build->{'name'} .q{ }. $text{$status} . q{ in } . $repository->{'name'} . q{ r: } . $revision->{'commit_id'};
 } # }}}
 
 sub _rep_describe_revision { # {{{
-    my ( $revision ) = @_;
+    my ( $repository, $build, $revision ) = @_;
 
     my $text = q{};
     
     my $message = $revision->{'message'};
     chomp $message;
 
-    $text .= q{Report for commit: }. $revision->{'commit_id'}. qq{\n\n};
+    $text .= qq{Report for:\n}.
+    $text .= q{  Repository: }. $repository->{'name'}. qq{\n};
+    $text .= q{       Build: }. $build->{'name'}. qq{\n};
+    $text .= q{   Commit ID: }. $revision->{'commit_id'}. qq{\n};
+    $text .= qq{\n};
     $text .= q{Committed by } . $revision->{'commiter'} . q{ at } . ( localtime $revision->{'timestamp'} ) . qq{\n};
     $text .= qq{with message:\n} . $revision->{'message'} . qq{\n};
 

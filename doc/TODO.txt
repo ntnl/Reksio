@@ -102,18 +102,19 @@
 [X]             Commands documentation
 [X]             Test framework documentation
 [X]         Improve test coverage
-[>]         Debug
+[X]         Debug
 [X]             Sort IDs in reksio_dispatch, so stuff is built in "stable" order. Major.
 [X]             Reports sent by Reksio have no title defined, thus get 'Haloooooo, nurse!' default. This looks funny ;) Major.
 [X]             Add timestamp/date to Dispatch log-like output
 [X]             Dispatch requires --single=0, otherwise dumps help. Blocker.
-[ ]             Even if a build fixes some tests, report is still titled 'Failed'
+[X]             Missing foreign key can cause data corruption.
+[X]             GIT fetches revisions in reverse order, if there are more then 100 revisions, only 100 newest will be fetched - last will have missing parent :(
+[X]             Even if a build fixes some tests, report is still titled 'Failed'
 [>]     Prepare stuff to upload
 [X]         Make a (spartan) website
 [X]         Make a package (Module::Build)
 [ ]         Generate docs (from POD)
 [ ]         Check README (possibly create)
-[ ]         Generate source code dump
 [ ]         Generate coverage report
 [ ]     Upload stuff
 [ ]         Upload documentation
