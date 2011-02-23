@@ -5,3 +5,9 @@
 \.bak$
 ^MANIFEST\.SKIP$
 ^.git
+^MYMETA.yml$
+^cover_db
+\..+?\.swp$
+\..+?\.swo$
+^[^\\]+\.tmp$
+^Reksio-v.+?tar\.gz$

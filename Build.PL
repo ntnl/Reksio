@@ -7,7 +7,11 @@ use Module::Build;
 my $build = Module::Build->new(
     module_name => 'Reksio',
     license     => 'perl',
-    requires    => {
+
+    configure_requires => {
+        'Module::Build' => 0.34
+    },
+    requires => {
         'perl' => '5.10.0',
 
         'Carp::Assert::More' => q{1.10},

@@ -71,6 +71,7 @@ t/per-module/Reksio-Cmd-DelRepo.t
 t/per-module/Reksio-API-Config.t
 t/per-module/Reksio-API-User.t
 t/per-module/Reksio-Cmd-DelBuild.t
+Build.PL
 doc/TODO.txt
 doc/Scraps.txt
 MANIFEST
