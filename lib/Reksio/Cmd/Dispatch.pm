@@ -227,7 +227,7 @@ sub main { # {{{
         if (not $i_did_something) {
             _log_out("idle run, going to sleep for a while.");
 
-            sleep 75; # FIXME: This should be configurable!
+            sleep 15 * 60; # FIXME: This should be configurable!
         }
     }
 
@@ -279,7 +279,14 @@ sub run_command { # {{{
 
     my $main_sub = \&{ $main_sub_name };
 
-    return $main_sub->(@params);
+    my $return_value = eval { return $main_sub->(@params); };
+
+    if ($EVAL_ERROR) {
+        _log_out("Failed to run: " . $main_sub_name);
+        _log_out("Error:\n" . $EVAL_ERROR);
+    }
+
+    return $return_value;
 } # }}}
 
 # vim: fdm=marker

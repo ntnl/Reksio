@@ -307,7 +307,7 @@ sub _rep_describe_revision { # {{{
     my $message = $revision->{'message'};
     chomp $message;
 
-    $text .= qq{Report for:\n}.
+    $text .= qq{Report for:\n};
     $text .= q{  Repository: }. $repository->{'name'}. qq{\n};
     $text .= q{       Build: }. $build->{'name'}. qq{\n};
     $text .= q{   Commit ID: }. $revision->{'commit_id'}. qq{\n};
