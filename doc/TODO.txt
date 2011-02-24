@@ -113,7 +113,7 @@
 [>]     Prepare stuff to upload
 [X]         Make a (spartan) website
 [X]         Make a package (Module::Build)
-[ ]         Generate docs (from POD)
+[X]         Generate docs (from POD)
 [ ]         Check README (possibly create)
 [ ]         Generate coverage report
 [ ]     Upload stuff
