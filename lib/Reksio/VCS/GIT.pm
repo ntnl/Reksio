@@ -27,6 +27,10 @@ sub vcs_revisions { # {{{
     
     my $repo = $self->_bare_copy_location();
 
+    # Fetch changes from origin...
+    $repo->run( q{pull}, q{-q} );
+
+    # Get history.
     my @logs;
     if ($start_at) {
         @logs = $repo->log( $start_at . q{..HEAD} );
