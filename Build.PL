@@ -8,6 +8,9 @@ my $build = Module::Build->new(
     module_name => 'Reksio',
     license     => 'perl',
 
+    create_readme  => 1,
+    create_license => 1,
+
     configure_requires => {
         'Module::Build' => 0.34
     },
@@ -24,10 +27,6 @@ my $build = Module::Build->new(
         'Params::Validate'   => q{0.95},
         'SQL::Abstract'      => q{1.61},
         'YAML::Any'          => q{0.72},
-
-        # Left for future reference:
-#        'Some::Module'  => '1.23',
-#        'Other::Module' => '>= 1.2, != 1.5, < 2.0',
     },
     build_requires => {
         'Test::More'  => q{0.94},

@@ -110,12 +110,12 @@
 [X]             Missing foreign key can cause data corruption.
 [X]             GIT fetches revisions in reverse order, if there are more then 100 revisions, only 100 newest will be fetched - last will have missing parent :(
 [X]             Even if a build fixes some tests, report is still titled 'Failed'
-[>]     Prepare stuff to upload
+[X]     Prepare stuff to upload
 [X]         Make a (spartan) website
 [X]         Make a package (Module::Build)
 [X]         Generate docs (from POD)
-[ ]         Check README (possibly create)
-[ ]         Generate coverage report
+[X]         Check README (possibly create)
+[X]         Generate coverage report
 [ ]     Upload stuff
 [ ]         Upload documentation
 [ ]         Upload dumped code
