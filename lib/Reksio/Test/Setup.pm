@@ -202,5 +202,16 @@ END {
     }
 }
 
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Bartłomiej /Natanael/ Syguła
+
+This is free software.
+It is licensed, and can be distributed under the same terms as Perl itself.
+
+More information on: L<http://reksio-project.org/>
+
+=cut
+
 # vim: fdm=marker
 1;
