@@ -116,17 +116,12 @@
 [X]         Generate docs (from POD)
 [X]         Check README (possibly create)
 [X]         Generate coverage report
-[ ]     Upload stuff
-[ ]         Upload documentation
-[ ]         Upload dumped code
-[ ]         Upload coverage report
-[ ]         Upload archive
-[ ]         Upload webpage
-[ ]     Push news to social sites
-[ ]         Twitter
-[ ]         Identi.ca
-[ ]         Facebook
-[ ]         Linked.In
+[X]     Upload stuff
+[X]         Upload documentation
+[X]         Upload dumped code
+[X]         Upload coverage report
+[X]         Upload archive
+[X]         Upload webpage
 
  Known issues to be resolved
 
