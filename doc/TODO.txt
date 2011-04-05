@@ -1,4 +1,15 @@
 
+ Tasks for v1.1 - "Subversion support"
+
+[>] SVN VCS
+[>]     Research SVN::Client
+[ ]     Implement fetching revisions
+[ ]     Implement checkout
+[ ] Release
+[ ]     Make a package
+[ ]     Upload to the site
+[ ]     Spread the news
+
  Roadmap for v1.0
 
 [X] Bootstrap
